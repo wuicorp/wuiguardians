@@ -38,5 +38,8 @@ gem 'spring',        group: :development
 
 gem 'sqlite3', group: :development
 
+# PostgreSQL
+gem 'pg'
+
 # Serve static assets to make rails 4 work with heroku
 gem 'rails_12factor', group: :production
