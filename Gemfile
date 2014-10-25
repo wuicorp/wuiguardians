@@ -44,3 +44,9 @@ gem 'pg'
 
 # Serve static assets to make rails 4 work with heroku
 gem 'rails_12factor', group: :production
+
+# Use puma as the app server
+gem 'puma'
+
+# Use tubesock for websockets
+gem 'tubesock'
