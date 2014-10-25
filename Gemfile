@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.1.2'
+
 gem 'rails', '4.1.6'
 
 # Use SCSS for stylesheets
@@ -34,7 +36,6 @@ gem 'spring',        group: :development
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-
 
 gem 'sqlite3', group: :development
 
