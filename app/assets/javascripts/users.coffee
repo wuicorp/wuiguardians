@@ -1,5 +1,5 @@
 $ ->
-  socket = new WebSocket "ws://#{window.location.host}/users/connect"
+  socket = new WebSocket "ws://#{window.location.host}/api/v1/users/connect"
 
   socket.onmessage = (event) ->
     if event.data.length
