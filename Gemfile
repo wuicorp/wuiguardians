@@ -41,3 +41,6 @@ gem 'puma'
 
 # Use tubesock for websockets
 gem 'tubesock'
+
+# Use devise for users
+gem 'devise'
