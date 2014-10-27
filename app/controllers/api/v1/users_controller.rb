@@ -1,7 +1,17 @@
 module Api
   module V1
-    class UsersController < Api::V1::BaseController
+    class UsersController < ApiController
       include Tubesock::Hijack
+
+      before_action :authenticate!, only: [:show]
+
+      def create
+        respond_with User.create(params[:user])
+      end
+
+      def show
+        respond_with User.find(params[:id])
+      end
 
       def connect
         hijack do |tubesock|
@@ -13,6 +23,12 @@ module Api
             tubesock.send_data "You said: #{data}"
           end
         end
+      end
+
+      private
+
+      def caller_id
+        params[:id]
       end
     end
   end
