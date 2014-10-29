@@ -42,5 +42,10 @@ gem 'puma'
 # Use tubesock for websockets
 gem 'tubesock'
 
-# Use devise for users
+# Use devise for web
 gem 'devise'
+
+# User doorkeeper for api
+gem 'doorkeeper'
+
+gem 'byebug'
