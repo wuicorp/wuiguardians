@@ -50,4 +50,8 @@ gem 'doorkeeper'
 
 gem 'byebug'
 
-gem 'rspec-rails', '~> 3.1.0', group: :test
+group :test do
+  gem 'rspec-rails', '~> 3.1.0'
+  gem 'shoulda-matchers', '~> 2.7.0'
+end
+
