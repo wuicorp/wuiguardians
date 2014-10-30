@@ -49,3 +49,9 @@ gem 'devise'
 gem 'doorkeeper'
 
 gem 'byebug'
+
+group :test do
+  gem 'rspec-rails', '~> 3.1.0'
+  gem 'shoulda-matchers', '~> 2.7.0'
+end
+
