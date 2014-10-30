@@ -49,3 +49,5 @@ gem 'devise'
 gem 'doorkeeper'
 
 gem 'byebug'
+
+gem 'rspec-rails', '~> 3.1.0', group: :test
