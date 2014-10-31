@@ -12,6 +12,8 @@ Rails.application.routes.draw do
           get :connect
         end
       end
+
+      post '/sign_up', to: 'registrations#create'
     end
   end
 end
