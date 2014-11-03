@@ -39,9 +39,6 @@ gem 'rails_12factor', group: :production
 # Use puma as the app server
 gem 'puma'
 
-# Use tubesock for websockets
-gem 'tubesock'
-
 # Use devise for web
 gem 'devise'
 
