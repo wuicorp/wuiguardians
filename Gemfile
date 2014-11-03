@@ -4,16 +4,9 @@ ruby '2.1.2'
 
 gem 'rails', '4.1.6'
 
-# Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.3'
-
-# Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
-
-# Use jquery as the JavaScript library
 gem 'jquery-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -29,21 +22,15 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'spring', group: :development
 
 gem 'sqlite3', group: :development
-
-# PostgreSQL
 gem 'pg'
 
 # Serve static assets to make rails 4 work with heroku
 gem 'rails_12factor', group: :production
 
-# Use puma as the app server
 gem 'puma'
-
-# Use devise for web
 gem 'devise'
-
-# User doorkeeper for api
 gem 'doorkeeper'
+gem 'pusher'
 
 gem 'byebug'
 
