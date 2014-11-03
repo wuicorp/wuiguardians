@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
          :confirmable
 
   has_many :vehicles
+  accepts_nested_attributes_for :vehicles
 
   validates_presence_of :password_confirmation, if: :password_required?
 end

@@ -16,7 +16,8 @@ module Api
       private
 
       def user_params
-        params.require(:user).permit(:email, :password, :password_confirmation)
+        params.require(:user).permit(:email, :password, :password_confirmation,
+                                     vehicles_attributes: [:identifier])
       end
 
       def client_id
