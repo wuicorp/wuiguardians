@@ -12,8 +12,12 @@ module Api
       end
 
       # Checks that the "caller" is the owner of the token.
+      def authenticate_resouce!
+        unauthorized! if !current_owner || (current_owner.id != resource_id.to_i)
+      end
+
       def authenticate!
-        unauthorized! if !current_owner || (current_owner.id != caller_id.to_i)
+        unauthorized! unless current_owner
       end
 
       def unauthorized!
