@@ -16,7 +16,7 @@
  var channel = pusher.subscribe('<%= @user.id %>');
  
 channel.bind('wui_create', function(data) {
-   alert('WUI received: ' + data.message.wui.type);
+   alert('WUI received: ' + data.message.wui.identifier);
  });
  
 channel.bind('wui_update', function(data) {
