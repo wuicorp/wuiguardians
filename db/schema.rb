@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141030184852) do
+ActiveRecord::Schema.define(version: 20141105082834) do
 
   create_table "oauth_access_grants", force: true do |t|
     t.integer  "resource_owner_id", null: false
@@ -76,10 +76,21 @@ ActiveRecord::Schema.define(version: 20141030184852) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
   create_table "vehicles", force: true do |t|
-    t.integer "user_id"
-    t.string  "identifier"
+    t.integer  "user_id"
+    t.string   "identifier"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "vehicles", ["user_id"], name: "index_vehicles_on_user_id"
+
+  create_table "wuis", force: true do |t|
+    t.string   "identifier"
+    t.integer  "owner_id"
+    t.integer  "receiver_id"
+    t.string   "utility"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
