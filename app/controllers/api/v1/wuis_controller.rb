@@ -33,7 +33,11 @@ module Api
       # Is just owner-receiver comunication, so the destination is
       #   who is not the caller (current_owner).
       def wui_destination
-        (wui.receiver_id == current_owner.id ? wui.owner_id : wui.receiver_id).to_s
+        if wui.vehicle_user_id == current_owner.id
+          wui.user_id
+        else
+          wui.vehicle_user_id
+        end.to_s
       end
 
       def msg
@@ -43,19 +47,14 @@ module Api
       def wui_params_for_create
         return unless params[:wui]
         params.require(:wui)
-          .merge(owner_id: current_owner.id, receiver_id: vehicle_owner_id)
-          .permit(:identifier, :owner_id, :receiver_id)
+          .merge(user: current_owner, vehicle: vehicle)
+          .permit(:identifier, :user, :vehicle)
       end
 
       def wui_params_for_update
         return unless params[:wui]
         params.require(:wui)
           .permit(:identifier, :utility)
-      end
-
-      def vehicle_owner_id
-        return unless vehicle
-        vehicle.user_id.to_s
       end
 
       def vehicle
