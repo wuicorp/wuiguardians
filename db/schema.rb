@@ -86,8 +86,8 @@ ActiveRecord::Schema.define(version: 20141105082834) do
 
   create_table "wuis", force: true do |t|
     t.string   "identifier"
-    t.integer  "owner_id"
-    t.integer  "receiver_id"
+    t.integer  "user_id"
+    t.integer  "vehicle_id"
     t.string   "utility"
     t.datetime "created_at"
     t.datetime "updated_at"
