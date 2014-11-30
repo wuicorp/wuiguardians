@@ -28,7 +28,6 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
-    bcrypt (3.1.9)
     builder (3.2.2)
     byebug (3.5.1)
       columnize (~> 0.8)
@@ -43,13 +42,6 @@ GEM
     coffee-script-source (1.8.0)
     columnize (0.8.9)
     debugger-linecache (1.2.0)
-    devise (3.4.0)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 3.2.6, < 5)
-      responders
-      thread_safe (~> 0.1)
-      warden (~> 1.2.3)
     diff-lcs (1.2.5)
     doorkeeper (1.4.0)
       railties (>= 3.1)
@@ -70,7 +62,6 @@ GEM
     mime-types (2.4.3)
     minitest (5.4.2)
     multi_json (1.10.1)
-    orm_adapter (0.5.0)
     pg (0.17.1)
     puma (2.9.1)
       rack (>= 1.1, < 2.0)
@@ -104,8 +95,6 @@ GEM
     rake (10.3.2)
     rdoc (4.1.2)
       json (~> 1.4)
-    responders (1.1.1)
-      railties (>= 3.2, < 4.2)
     rspec-core (3.1.7)
       rspec-support (~> 3.1.0)
     rspec-expectations (3.1.2)
@@ -156,8 +145,6 @@ GEM
     uglifier (2.5.3)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    warden (1.2.3)
-      rack (>= 1.0)
 
 PLATFORMS
   ruby
@@ -165,7 +152,6 @@ PLATFORMS
 DEPENDENCIES
   byebug
   coffee-rails (~> 4.0.0)
-  devise
   doorkeeper
   jbuilder (~> 2.0)
   jquery-rails

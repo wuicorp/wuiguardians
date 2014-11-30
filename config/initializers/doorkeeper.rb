@@ -13,8 +13,8 @@ Doorkeeper.configure do
   end
 
   resource_owner_from_credentials do
-    u = User.find_for_database_authentication(email: params[:username])
-    u if u && u.valid_password?(params[:password])
+    u = User.find_by_phone_number(params[:phone_number])
+    u if u && u.valid_verification_code?(params[:verification_code])
   end
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
