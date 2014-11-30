@@ -8,7 +8,6 @@ module Api
           render(json: { user: user.as_json, access_token: token },
                  status: 201)
         else
-          warden.custom_failure!
           render json: user.errors, status: 422
         end
       end
