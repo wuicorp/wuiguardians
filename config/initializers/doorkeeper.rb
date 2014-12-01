@@ -13,7 +13,7 @@ Doorkeeper.configure do
   end
 
   resource_owner_from_credentials do
-    u = User.find_by_phone_number(params[:phone_number])
+    u = User.find_by_phone(params[:phone_prefix], params[:phone_number])
     u if u && u.valid_verification_code?(params[:verification_code])
   end
 

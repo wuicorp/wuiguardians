@@ -15,7 +15,7 @@ module Api
       private
 
       def user_params
-        params.require(:user).permit(:phone_number,
+        params.require(:user).permit(:phone_prefix, :phone_number,
                                      vehicles_attributes: [:identifier])
       end
 

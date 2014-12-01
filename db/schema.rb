@@ -53,13 +53,14 @@ ActiveRecord::Schema.define(version: 20141105082834) do
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true
 
   create_table "users", force: true do |t|
+    t.string   "phone_prefix",      null: false
     t.string   "phone_number",      null: false
     t.string   "confirmation_code"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "users", ["phone_number"], name: "index_users_on_phone_number", unique: true
+  add_index "users", ["phone_prefix", "phone_number"], name: "index_users_on_phone_prefix_and_phone_number"
 
   create_table "vehicles", force: true do |t|
     t.integer  "user_id"
