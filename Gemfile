@@ -28,11 +28,12 @@ gem 'pg'
 gem 'rails_12factor', group: :production
 
 gem 'puma'
-gem 'devise'
 gem 'doorkeeper'
 gem 'pusher'
 
 gem 'byebug'
+
+gem 'phonelib'
 
 group :test do
   gem 'rspec-rails', '~> 3.1.0'

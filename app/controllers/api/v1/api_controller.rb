@@ -12,7 +12,7 @@ module Api
       end
 
       # Checks that the "caller" is the owner of the token.
-      def authenticate_resouce!
+      def authenticate_resource!
         unauthorized! if !current_owner || (current_owner.id != resource_id.to_i)
       end
 

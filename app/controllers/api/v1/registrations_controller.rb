@@ -8,7 +8,6 @@ module Api
           render(json: { user: user.as_json, access_token: token },
                  status: 201)
         else
-          warden.custom_failure!
           render json: user.errors, status: 422
         end
       end
@@ -16,7 +15,7 @@ module Api
       private
 
       def user_params
-        params.require(:user).permit(:email, :password, :password_confirmation,
+        params.require(:user).permit(:phone_prefix, :phone_number,
                                      vehicles_attributes: [:identifier])
       end
 
