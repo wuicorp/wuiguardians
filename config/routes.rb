@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :developers
   use_doorkeeper
 
   root 'welcome#index'
