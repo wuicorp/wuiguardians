@@ -29,6 +29,7 @@ gem 'rails_12factor', group: :production
 
 gem 'puma'
 gem 'doorkeeper'
+gem 'devise'
 gem 'pusher'
 gem 'rollbar', '~> 1.3.0'
 
