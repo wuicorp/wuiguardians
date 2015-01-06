@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   devise_for :developers
-  use_doorkeeper
+
+  use_doorkeeper do
+    controllers applications: 'oauth/applications'
+  end
 
   root 'welcome#index'
 
