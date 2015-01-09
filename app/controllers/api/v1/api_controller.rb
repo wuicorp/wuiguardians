@@ -2,7 +2,7 @@ module Api
   module V1
     class ApiController < ::ApplicationController
       respond_to :json
-      doorkeeper_for :all
+      before_action :doorkeeper_authorize!
       skip_before_filter :verify_authenticity_token
 
       # Find the user that owns the access token
