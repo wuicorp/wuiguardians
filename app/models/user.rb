@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
     find_by_phone_prefix_and_phone_number(prefix, number)
   end
 
-  def valid_verification_code?(code)
-    verification_code == code
+  def valid_confirmation_code?(code)
+    confirmation_code == code
   end
 end
