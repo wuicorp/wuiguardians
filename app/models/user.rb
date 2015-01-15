@@ -12,8 +12,4 @@ class User < ActiveRecord::Base
   def self.find_by_phone(prefix, number)
     find_by_phone_prefix_and_phone_number(prefix, number)
   end
-
-  def valid_verification_code?(code)
-    verification_code == code
-  end
 end
