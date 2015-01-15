@@ -3,8 +3,7 @@ module Api
     class SessionsController < ApiController
       def create
         user = User.new(user_params)
-        app = Doorkeeper::Application.find_by(uid: params[:client_id],
-                                              secret: params[:client_secret])
+        app = current_application
         if app && user.save
           create_successful_response(app, user)
         else

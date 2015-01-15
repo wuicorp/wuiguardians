@@ -7,8 +7,13 @@ module Api
 
       # Find the user that owns the access token
       def current_owner
-        return unless doorkeeper_token.resource_owner_id
-        @current_owner ||= User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+        return unless doorkeeper_token && doorkeeper_token.resource_owner_id
+        @current_owner ||= User.find(doorkeeper_token.resource_owner_id)
+      end
+
+      def current_application
+        return unless doorkeeper_token && doorkeeper_token.application_id
+        @current_application ||= Doorkeeper::Application.find(doorkeeper_token.application_id)
       end
 
       # Checks that the "caller" is the owner of the token.
