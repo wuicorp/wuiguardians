@@ -15,19 +15,6 @@ module Api
         return unless doorkeeper_token && doorkeeper_token.application_id
         @current_application ||= Doorkeeper::Application.find(doorkeeper_token.application_id)
       end
-
-      # Checks that the "caller" is the owner of the token.
-      def authenticate_resource!
-        unauthorized! if !current_owner || (current_owner.id != resource_id.to_i)
-      end
-
-      def authenticate!
-        unauthorized! unless current_owner
-      end
-
-      def unauthorized!
-        render json: { error: :unautorized }, status: :unauthorized
-      end
     end
   end
 end
