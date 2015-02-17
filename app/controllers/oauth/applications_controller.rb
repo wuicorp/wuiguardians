@@ -1,4 +1,5 @@
 class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
+  respond_to :html
   before_filter :authenticate_user!
 
   def index
@@ -8,10 +9,18 @@ class Oauth::ApplicationsController < Doorkeeper::ApplicationsController
   # only needed if each application must have some owner
   def create
     @application = Doorkeeper::Application.new(application_params)
-    @application.owner = current_user if Doorkeeper.configuration.confirm_application_owner?
+
+    if Doorkeeper.configuration.confirm_application_owner?
+      @application.owner = current_user
+    end
+
     if @application.save
-      flash[:notice] = I18n.t(:notice, :scope => [:doorkeeper, :flash, :applications, :create])
-      respond_with( :oauth, @application, location: oauth_application_url( @application ) )
+      flash[:notice] =
+        I18n.t(:notice, scope: [:doorkeeper, :flash, :applications, :create])
+
+      respond_with(:oauth,
+                   @application,
+                   location: oauth_application_url(@application))
     else
       render :new
     end
