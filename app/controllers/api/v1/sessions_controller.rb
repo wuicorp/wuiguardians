@@ -15,7 +15,7 @@ module Api
       private
 
       def user_params
-        params.permit(:phone_prefix, :phone_number)
+        params.permit(:email, :password, :password_confirmation)
       end
 
       def find_or_create_access_token(app, user)

@@ -1,15 +1,17 @@
 class User < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  #  :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable,
+         :confirmable, :lockable
+
   has_many :wuis
   has_many :vehicles
   accepts_nested_attributes_for :vehicles
 
-  validates_uniqueness_of :phone_number, scope: [:phone_prefix]
-  validates :phone_number, phone:  { possible: true, allow_blank: false, types: [:mobile] }
-  validates :phone_prefix, presence: true,
-                           numericality: true,
-                           length: { minimum: 1, maximum: 3 }
+  has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
-  def self.find_by_phone(prefix, number)
-    find_by_phone_prefix_and_phone_number(prefix, number)
+  def developer?
+    role == 'developer'
   end
 end

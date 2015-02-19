@@ -41,3 +41,5 @@ gem 'rspec-rails', '~> 3.1.0', group: :test
 gem 'shoulda-matchers', '~> 2.7.0', group: :test
 
 gem 'dotenv-rails', groups: [:development, :test]
+
+gem 'mailcatcher', group: :development

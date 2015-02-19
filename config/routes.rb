@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :developers
+  devise_for :users
 
   use_doorkeeper do
     controllers applications: 'oauth/applications'
