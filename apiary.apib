@@ -1,46 +1,305 @@
 FORMAT: 1A
 
 # wuiguardians
-WUIGuardians API is REST api, based on OAuth2 authorization protocol to provide access to the guardians resources.
+REST api based on OAuth2 authorization protocol to provide access to the wuiguardians.com resources.
 
-# Group Wuis
-Notes related resources of the **Wuis API**
 
-## Wuis Collection [/wuis]
-### List all Wuis [GET]
+# Group OAuth Tokens
+## Token [/oauth/token]
+### Retrieve a token [POST]
+
++ Request Retrieve client credentials token
+
+    + Body
+    
+            {
+                "grant_type": "client_credentials",
+                "client_id": "<client-application-id>,
+                "client_secret": "<client-application-secret>"
+            }
+            
++ Response 200 (application/json)
+    
+        {
+            "access_token": "<client-credentials-access-token>",
+            "expires_in": "7200",
+            "token_type": "bearer"
+        }
+            
++ Request Retrieve password token
+
+    + Body
+    
+            {
+                "grant_type": "password",
+                "username": "user@email.com",
+                "password": "user-secret"
+            }
+
 + Response 200 (application/json)
 
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
+        {
+            "access_token": "<password-access-token>",
+            "expires_in": "7200",
+            "refresh_token": "<refresh-token-for-password-access-token>"
+            "token_type": "bearer"
+        }
+            
++ Request Retrieve refresh token (application/json)
+    + Headers
+    
+            Authorization: Bearer <password-access-token>
+            
+    + Body
+    
+            {
+                "grant_type": "refresh_token",
+                "refresh_token": "<refresh-token-for-password-token>",
+                "client_id": "<client-application-id>",
+                "client_secret": "<client-application-secret>"
+            }
 
-### Create a Wui [POST]
-+ Request (application/json)
++ Response 200 (application/json)
 
-        { "title": "Buy cheese and bread for breakfast." }
+        {
+            "access_token": "<password-refreshed-access-token>",
+            "expires_in": "7200",
+            "refresh_token": "<refresh-token-for-password-refreshed-access-token>"
+            "token_type": "bearer"
+        }
+
+
+# Group Sessions
+
+## Sessions Collection [/sessions]
+### Create [POST]
+This action assumes two possible flows:
++ If the user does not exist, it **registers** a new one for email and password provided.
++ If the user exists, it **authenticates** it using email and password provided.
+    
+In booth cases, it returns the tokens required to access user resources, but also the user resource.
+
++ Request
+    + Headers
+
+            Authorization: Bearer <client-credentials-access-token>
+            
+    + Body
+    
+            {
+                "email": "user@mail.com",
+                "password": "user-secret"
+            }
 
 + Response 201 (application/json)
 
-        { "id": 3, "title": "Buy cheese and bread for breakfast." }
+        {
+            "access_token": "<password-access-token>",
+            "expires_in": "7200",
+            "refresh_token": "<refresh-token-for-password-access-token>"
+            "token_type": "bearer",
+            "user": {
+                "id": "1",
+                "email": "user@mail.com",
+                "name": "User Alias"
+            }
+        }
 
-## Wui [/wuis/{id}]
-A single Note object with all its details
+## Provider sessions [/sessions/{provider}]
+You can also create session for third party providers.
 
-+ Parameters
-    + id (required, number, `1`) ... Numeric `id` of the Note to perform action with. Has example value.
+### Create [POST]
+Allowed providers: **[facebook, google]**
 
-### Retrieve a Wui [GET]
-+ Response 200 (application/json)
++ Request
+    + Headers
 
-    + Header
-
-            X-My-Header: The Value
+            Authorization: Bearer <client-credentials-access-token>
 
     + Body
 
-            { "id": 2, "title": "Pick-up posters from post-office" }
+            {
+                "token": "<provider-access-token>"
+            }
 
-### Remove a Wui [DELETE]
-+ Response 204
++ Response 201 (application/json)
+
+        {
+            "access_token": "<password-access-token>",
+            "expires_in": "7200",
+            "refresh_token": "<refresh-token-for-password-access-token>"
+            "token_type": "bearer",
+            "user": {
+                "id": "1",
+                "email": "user@mail.com",
+                "name": "User Alias"
+            }
+        }
+
+
+# Group Users
+
+## Me [/users/me]
+Retireves the user owner of the password-access-token.
+
+### Get [GET]
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
++ Response 200 (application/json)
+
+        {
+            "id": "1",
+            "email": "user@email.com",
+            "name": "User Alias"
+            "vehicles": [
+                {
+                    "id": "1",
+                    "identifier": "6699CMZ"
+                },
+                {
+                    "id": "2",
+                    "identifier": "7777AYZ"
+                }
+            ]
+        }
+
+### Update [PUT]
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
+    + Body
+
+            { "name": "New Alias" }
+
++ Response 200 (application/json)
+
+        {
+            "id": "1",
+            "email": "user@email.com",
+            "name": "New Alias"
+            "vehicles": [
+                { "id": "1", "identifier": "6699CMZ" },
+                { "id": "2", "identifier": "7777AYZ" }
+            ]
+        }
+
+
+# Group Vehicles
+## Vehicles Collection [/vehicles]
+### Get [GET]
+Retrieve all vehicles of the password-access-token owner.
+
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
++ Response 200 (application/json)
+
+        [
+            { "id": "1", "identifier": "6699CMZ" },
+            { "id": "2", "identifier": "7777AYZ" }
+        ]
+
+### Create [POST]
+Create vehicle for the password-access-token owner.
+
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
+    + Body
+
+            { "identifier": "6699CMZ" }
+
++ Response 200 (application/json)
+
+        { "id": "1", "identifier": "6699CMZ" }
+
+## Vehicle [/vehicles/{id}]
+### Update [PUT]
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
+    + Body
+
+            { "identifier": "5599CMZ" }
+
++ Response 200 (application/json)
+
+        { "id": "1", "identifier": "5599CMZ" }
+
+### Delete [DELETE]
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
++ Response 200 (application/json)
+
+
+# Group Wuis
+## Wuis Collection [/wuis]
+### Get [GET]
+Get all wuis sent and received for the password-access-token owner.
+
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
++ Response 200 (application/json)
+    
+        [{
+            "id": "1",
+            "type": "crash",
+            "action": "sent",
+            "status": "pending",
+            "vehicle": {
+                "id": "1"
+                "identifier": "6699CMZ"
+            }
+        },
+        {
+            "id": "3",
+            "type": "park",
+            "action": "received",
+            "status": "confirmed",
+            "vehicle": {
+                "id": "3"
+                "identifier": "7777JPQ"
+            }
+        }]
+
+### Create "Send" [POST]
+This action creates a wui, but also sends it to to the required vehicle.
+
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
+    + Body
+
+            { "type": "crash", "vehicle_identifier": "6699CMZ" }
+            
++ Response 201 (application/json)
+    
+        {
+            "id": "1",
+            "type": "crash",
+            "action": "sent",
+            "status": "pending",
+            "vehicle": {
+                "id": "1"
+                "identifier": "6699CMZ"
+            }
+        }
