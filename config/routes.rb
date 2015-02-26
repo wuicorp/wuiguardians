@@ -1,14 +1,22 @@
 Rails.application.routes.draw do
+  root 'welcome#index'
+
   devise_for :users
 
-  use_doorkeeper do
-    controllers applications: 'oauth/applications'
+  scope :api do
+    scope :v1 do
+      use_doorkeeper do
+        controllers applications: 'oauth/applications'
+      end
+    end
   end
-
-  root 'welcome#index'
 
   namespace :api do
     namespace :v1 do
+      use_doorkeeper do
+        controllers applications: 'oauth/applications'
+      end
+
       post '/sessions', to: 'sessions#create'
       resources :users do
         collection do
