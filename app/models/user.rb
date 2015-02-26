@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
          :confirmable, :lockable
 
   has_many :wuis
-  has_many :vehicles
+  has_and_belongs_to_many :vehicles
   accepts_nested_attributes_for :vehicles
 
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner

@@ -1,5 +1,5 @@
 require 'rails_helper'
 
 describe Vehicle do
-  it { should belong_to(:user) }
+  it { should have_and_belong_to_many(:user) }
 end
