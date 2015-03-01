@@ -39,6 +39,8 @@ gem 'phonelib'
 
 gem 'rspec-rails', '~> 3.1.0', group: :test
 gem 'shoulda-matchers', '~> 2.7.0', group: :test
+gem 'factory_girl', '~> 4.5.0', group: :test
+gem 'faker', '~> 1.4.3', group: :test
 
 gem 'dotenv-rails', groups: [:development, :test]
 

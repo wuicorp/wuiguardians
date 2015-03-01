@@ -2,13 +2,20 @@ module Api
   module V1
     class SessionsController < ApiController
       def create
-        user = User.new(user_params)
-        app = current_application
-        if app && user.save
-          create_successful_response(app, user)
+        @user = User.find_for_database_authentication(email: params[:email])
+        if @user
+          if @user.valid_password?(params[:password])
+            success
+          else
+            render json: { user: :unauthorized }, status: 401
+          end
         else
-          errors = app ? user.errors : { application: :invalid }
-          render json: errors, status: 422
+          @user = User.new(user_params)
+          if @user.save
+            success
+          else
+            render json: @user.errors, status: 422
+          end
         end
       end
 
@@ -18,20 +25,31 @@ module Api
         params.permit(:email, :password, :password_confirmation)
       end
 
-      def find_or_create_access_token(app, user)
+      def success
+        render json: response_for_create, status: 201
+      end
+
+      def response_for_create
+        token_response.merge(user: user_response)
+      end
+
+      def token_response
+        access_token = find_or_create_access_token
+        Doorkeeper::OAuth::TokenResponse.new(access_token).body
+      end
+
+      def user_response
+        @user.as_json(only: [:id, :email])
+      end
+
+      def find_or_create_access_token
         Doorkeeper::AccessToken.find_or_create_for(
-          app,
-          user.id,
+          current_application,
+          @user.id,
           nil,
           Doorkeeper.configuration.access_token_expires_in,
           Doorkeeper.configuration.refresh_token_enabled?
         )
-      end
-
-      def create_successful_response(app, user)
-        access_token = find_or_create_access_token(app, user)
-        render(json: Doorkeeper::OAuth::TokenResponse.new(access_token).body,
-               status: 201)
       end
     end
   end
