@@ -17,12 +17,15 @@ Rails.application.routes.draw do
         controllers applications: 'oauth/applications'
       end
 
-      post '/sessions', to: 'sessions#create'
+      resources :sessions, only: [:create]
+
       resources :users do
         collection do
           get :me
         end
       end
+
+      resources :vehicles, only: [:create]
       resources :wuis, only: [:create, :update]
     end
   end
