@@ -14,7 +14,7 @@ module Api
           if @user.save
             success
           else
-            render json: @user.errors, status: 422
+            render json: { errors: @user.errors }, status: 422
           end
         end
       end

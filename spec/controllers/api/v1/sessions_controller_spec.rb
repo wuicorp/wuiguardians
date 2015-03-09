@@ -2,57 +2,63 @@ require 'rails_helper'
 
 describe Api::V1::SessionsController do
   describe 'POST #create' do
-    context 'without authorization header' do
-      before { post :create }
-      it { is_expected.to respond_with(401) }
-    end
+    it { is_expected.to be_a_kind_of Api::V1::ApiController }
 
-    context 'with authorization header' do
-      before do
-        request.headers[:authorization] = "Bearer #{token}"
-        post :create, request_params
+    context 'valid authorization' do
+      let(:action) { -> { post :create, request_params } }
+
+      shared_examples 'successful response' do
+        it { is_expected.to respond_with(201) }
+        it 'responds with access_token' do
+          expect(response_body).to include 'access_token'
+          expect(response_body).to include 'expires_in'
+          expect(response_body).to include 'refresh_token'
+          expect(response_body).to include 'token_type'
+        end
+        it 'responds with the user' do
+          expect(response_body['user']['email']).to eq email
+        end
       end
 
-      context 'with valid token' do
-        let(:developer) { create(:user, role: 'developer') }
-        let(:application) { create(:application, owner: developer) }
-        let(:access_token) { create(:access_token, application: application) }
-        let(:token) { access_token.token }
-
-        context 'with unexisting user' do
-          context 'with valid parameters' do
-            let(:email) { 'user@mail.com' }
-            let(:password) { '12345678' }
-            let(:request_params) do
-              { email: email, password: password }
-            end
-
-            it { is_expected.to respond_with(201) }
-            it 'creates the user' do
-              expect(User.last.email).to eq email
-            end
+      context 'with unexisting user', authorized_application: true do
+        context 'with valid parameters' do
+          let(:email) { 'user@mail.com' }
+          let(:password) { '12345678' }
+          let(:request_params) do
+            { email: email, password: password }
           end
 
-          context 'with invalid parameters' do
-            let(:request_params) { {} }
-            it { is_expected.to respond_with(422) }
+          it_behaves_like 'successful response'
+          it 'creates the user' do
+            expect(User.last.email).to eq email
           end
         end
 
-        context 'with existing user' do
-          let(:user) { create(:user) }
-
-          context 'with right authentication parameters' do
-            let(:request_params) do
-              { email: user.email, password: user.password }
-            end
-            it { is_expected.to respond_with(201) }
+        context 'with invalid parameters' do
+          let(:request_params) { {} }
+          it { is_expected.to respond_with(422) }
+          it 'respond with validation errors' do
+            expect(response_body['errors']).to include 'email'
+            expect(response_body['errors']).to include 'password'
           end
+        end
+      end
 
-          context 'with wrong authentication parameters' do
-            let(:request_params) { { email: user.email, password: 'foo' } }
-            it { is_expected.to respond_with(401) }
+      context 'with existing user', authenticated_resource: true do
+        let(:user) { create(:user) }
+        let(:email) { user.email }
+        let(:password) { user.password }
+
+        context 'with right authentication parameters' do
+          let(:request_params) do
+            { email: email, password: password }
           end
+          it_behaves_like 'successful response'
+        end
+
+        context 'with wrong authentication parameters' do
+          let(:request_params) { { email: email, password: 'foo' } }
+          it { is_expected.to respond_with(401) }
         end
       end
     end
