@@ -46,17 +46,11 @@ REST api based on OAuth2 authorization protocol to provide access to the wuiguar
         }
             
 + Request Retrieve refresh token (application/json)
-    + Headers
-    
-            Authorization: Bearer <password-access-token>
-            
     + Body
     
             {
                 "grant_type": "refresh_token",
-                "refresh_token": "<refresh-token-for-password-token>",
-                "client_id": "<client-application-id>",
-                "client_secret": "<client-application-secret>"
+                "refresh_token": "<refresh-token-for-password-access-token>"
             }
 
 + Response 200 (application/json)
