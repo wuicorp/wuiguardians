@@ -1,5 +1,6 @@
 shared_context 'authenticated resource', authenticated_resource: true do
   before do
+    before_context if respond_to? :before_context
     request.headers[:authorization] = authorization
     action.call
   end
