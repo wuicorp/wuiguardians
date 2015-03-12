@@ -93,13 +93,10 @@ ActiveRecord::Schema.define(version: 20150311180705) do
   end
 
   create_table "vehicles", force: true do |t|
-    t.integer  "user_id"
     t.string   "identifier"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "vehicles", ["user_id"], name: "index_vehicles_on_user_id"
 
   create_table "wuis", force: true do |t|
     t.string   "identifier"
