@@ -15,6 +15,10 @@ module Api
         return unless doorkeeper_token && doorkeeper_token.application_id
         @current_application ||= Doorkeeper::Application.find(doorkeeper_token.application_id)
       end
+
+      def invalid_resource(resource)
+        render json: { errors: resource.errors }, status: 422
+      end
     end
   end
 end

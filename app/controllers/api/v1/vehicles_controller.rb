@@ -3,13 +3,29 @@ module Api
     class VehiclesController < ApiController
       def create
         @vehicle = Vehicle.new(vehicle_params)
-        render json: @vehicle.as_json, status: 201
+        @vehicle.users << current_owner
+        if @vehicle.save
+          success :create
+        else
+          invalid_resource @vehicle
+        end
       end
 
       private
 
       def vehicle_params
-        params.permit(:identifier).merge(user_id: current_owner.id)
+        params.permit(:identifier)
+      end
+
+      def success(action)
+        case action
+        when :create
+          render json: vehicle_response, status: 201
+        end
+      end
+
+      def vehicle_response
+        @vehicle.as_json(only: [:id, :identifier])
       end
     end
   end
