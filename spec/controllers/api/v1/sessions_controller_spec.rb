@@ -37,7 +37,7 @@ describe Api::V1::SessionsController do
         context 'with invalid parameters' do
           let(:request_params) { {} }
           it { is_expected.to respond_with(422) }
-          it 'respond with validation errors' do
+          it 'responds with validation errors' do
             expect(response_body['errors']).to include 'email'
             expect(response_body['errors']).to include 'password'
           end

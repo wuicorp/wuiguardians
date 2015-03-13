@@ -14,7 +14,7 @@ module Api
           if @user.save
             success
           else
-            render json: { errors: @user.errors }, status: 422
+            invalid_resource @user
           end
         end
       end
