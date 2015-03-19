@@ -29,8 +29,8 @@ describe Api::V1::UsersController do
       let(:vattrs2) { { id: 2, identifier: '2222222' } }
 
       let(:before_context) do
-        build(:vehicle, vattrs1).tap { |v| v.users << user }.save
-        build(:vehicle, vattrs2).tap { |v| v.users << user }.save
+        build(:vehicle, vattrs1).tap { |v| v.users << current_owner }.save
+        build(:vehicle, vattrs2).tap { |v| v.users << current_owner }.save
       end
 
       it 'responds with owned vehicles' do

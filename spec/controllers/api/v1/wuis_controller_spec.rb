@@ -18,15 +18,21 @@ describe Api::V1::WuisController do
       let(:received_wui) do
         sender = create(:user)
         vehicle = build(:vehicle)
-        vehicle.users << user
-        create(:wui, user: sender, vehicle: vehicle, updated_at: 2.minutes.ago)
+        vehicle.users << current_owner
+        create(:wui,
+               user: sender,
+               vehicle: vehicle,
+               updated_at: 2.minutes.ago)
       end
 
       let(:sent_wui) do
         receiver = create(:user)
         vehicle = build(:vehicle)
         vehicle.users << receiver
-        create(:wui, user: user, vehicle: vehicle, updated_at: 1.minute.ago)
+        create(:wui,
+               user: current_owner,
+               vehicle: vehicle,
+               updated_at: 1.minute.ago)
       end
 
       let(:before_context) do
@@ -58,7 +64,8 @@ describe Api::V1::WuisController do
 
       it 'includes the right vehicle in the response' do
         expect(response_body.last).to include 'vehicle'
-        expect(response_body.last['vehicle']['id']).to eq user.vehicles.first.id
+        expect(response_body.last['vehicle']['id']).to eq current_owner
+          .vehicles.first.id
       end
     end
   end
