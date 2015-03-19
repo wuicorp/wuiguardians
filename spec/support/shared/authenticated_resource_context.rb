@@ -6,10 +6,12 @@ shared_context 'authenticated resource', authenticated_resource: true do
   end
 
   let(:developer) { create(:user, role: 'developer') }
-  let(:user) { create(:user) }
+  let(:current_owner) { create(:user) }
   let(:application) { create(:application, owner: developer) }
   let(:access_token) do
-    create(:access_token, application: application, resource_owner_id: user.id)
+    create(:access_token,
+           application: application,
+           resource_owner_id: current_owner.id)
   end
   let(:token) { access_token.token }
   let(:authorization) { "Bearer #{token}" }

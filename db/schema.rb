@@ -99,10 +99,10 @@ ActiveRecord::Schema.define(version: 20150311180705) do
   end
 
   create_table "wuis", force: true do |t|
-    t.string   "identifier"
     t.integer  "user_id"
     t.integer  "vehicle_id"
-    t.string   "utility"
+    t.string   "wui_type"
+    t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
