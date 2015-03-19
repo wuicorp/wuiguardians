@@ -26,7 +26,7 @@ Rails.application.routes.draw do
       end
 
       resources :vehicles, only: [:create]
-      resources :wuis, only: [:create, :update]
+      resources :wuis, only: [:index, :create, :update]
     end
   end
 end

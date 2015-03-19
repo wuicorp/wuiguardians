@@ -1,4 +1,6 @@
 class Wui < ActiveRecord::Base 
+  attr_accessor :action
+
   belongs_to :user
   belongs_to :vehicle
 

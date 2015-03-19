@@ -1,8 +1,9 @@
 module Api
   module V1
     class WuisController < ApiController
-      before_action :authenticate!
-      attr_accessor :wui
+      def index
+        render json: all_wuis, status: 200
+      end
 
       def create
         @wui = Wui.new(wui_params_for_create)
@@ -25,6 +26,27 @@ module Api
       end
 
       private
+
+      def received_wuis
+        Wui.where(vehicle_id: current_owner.vehicles.map(&:id)).to_a.map do |wui|
+          wui.tap { |w| w.action = :received }
+        end
+      end
+
+      def sent_wuis
+        current_owner.wuis.to_a.map do |wui|
+          wui.tap { |w| w.action = :sent }
+        end
+      end
+
+      def all_wuis
+        wuis = received_wuis + sent_wuis
+        wuis.sort_by(&:updated_at).reverse.as_json(
+          only: [:id, :wui_type, :status, :updated_at],
+          include: [:vehicle],
+          methods: [:action]
+        )
+      end
 
       def wui_id
         params[:wui][:id] if params[:wui]
