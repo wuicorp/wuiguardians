@@ -14,4 +14,8 @@ class User < ActiveRecord::Base
   def developer?
     role == 'developer'
   end
+
+  def find_all_received_wuis
+    Wui.where(vehicle_id: vehicles.map(&:id))
+  end
 end

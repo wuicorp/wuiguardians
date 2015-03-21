@@ -5,4 +5,5 @@ describe Wui do
   it { should belong_to(:vehicle) }
   it { should validate_presence_of(:user) }
   it { should validate_presence_of(:vehicle) }
+  it { should validate_presence_of(:wui_type) }
 end

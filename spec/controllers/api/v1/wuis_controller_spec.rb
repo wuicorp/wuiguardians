@@ -69,4 +69,67 @@ describe Api::V1::WuisController do
       end
     end
   end
+
+  describe 'POST #create', authenticated_resource: true do
+    let(:action) { -> { post :create, request_params } }
+
+    context 'with valid parameters' do
+      let(:vehicle) { create(:vehicle, users: [current_owner]) }
+
+      let(:before_context) { vehicle }
+
+      let(:request_params) do
+        { wui_type: :crash, vehicle_identifier: vehicle.identifier }
+      end
+
+      context 'with successful pusher trigger' do
+        let(:notification) { double(:notification) }
+
+        let(:before_context) do
+          allow(controller).to receive(:notification_for)
+            .with(kind_of(Wui))
+            .and_return(notification)
+
+          expect(Pusher).to receive(:trigger)
+            .with(current_owner.id.to_s, 'wui_create', notification)
+        end
+
+        it { is_expected.to respond_with(201) }
+
+        it 'responds with right parameters' do
+          expect(response_body).to include 'id'
+          expect(response_body).to include 'wui_type'
+          expect(response_body).to include 'status'
+          expect(response_body).to include 'vehicle'
+          expect(response_body['vehicle']).to include 'id'
+          expect(response_body['vehicle']).to include 'identifier'
+        end
+      end
+
+      context 'with failing pusher trigger' do
+        let(:before_context) do
+          expect(Pusher).to receive(:trigger).and_raise(Pusher::Error)
+        end
+
+        it { is_expected.to respond_with 400 }
+        it 'does not create the wui' do
+          expect(Wui.all.count).to eq 0
+        end
+      end
+    end
+
+    context 'with invalid parameters' do
+      context 'with unexisting vehicle' do
+        let(:request_params) do
+          { wui_type: '', vehicle_identifier: 'unexiststing' }
+        end
+
+        it { is_expected.to respond_with(422) }
+        it 'has validation errors' do
+          expect(response_body['errors']).to include 'vehicle'
+          expect(response_body['errors']).to include 'wui_type'
+        end
+      end
+    end
+  end
 end

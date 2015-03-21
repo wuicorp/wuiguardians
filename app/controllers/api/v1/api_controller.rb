@@ -19,6 +19,10 @@ module Api
       def invalid_resource(resource)
         render json: { errors: resource.errors }, status: 422
       end
+
+      def third_party_error(e)
+        render json: { error: :third_party_error, description: e.as_json }, status: 400
+      end
     end
   end
 end
