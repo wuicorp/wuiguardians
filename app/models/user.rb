@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
   def developer?
-    role == 'developer'
+    role.to_sym == :developer
   end
 
   def find_all_received_wuis
