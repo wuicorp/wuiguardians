@@ -39,7 +39,7 @@ module Api
       end
 
       def user_response
-        @user.as_json(only: [:id, :email])
+        @user.as_json
       end
 
       def find_or_create_access_token

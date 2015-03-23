@@ -12,6 +12,17 @@ class User < ActiveRecord::Base
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner
 
   def developer?
-    role == 'developer'
+    role.to_sym == :developer
+  end
+
+  def find_all_received_wuis
+    Wui.where(vehicle_id: vehicles.map(&:id))
+  end
+
+  def as_json(options = {})
+    super({
+      only: [:id, :email, :name],
+      include: { vehicles: { only: [:id, :identifier] } }
+    }.merge(options))
   end
 end

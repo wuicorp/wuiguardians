@@ -47,14 +47,14 @@ describe Api::V1::WuisController do
       end
 
       it 'includes the expected attributes in the response' do
-        expect(response_body.last).to include 'id'
-        expect(response_body.last).to include 'wui_type'
-        expect(response_body.last).to include 'action'
-        expect(response_body.last).to include 'status'
-        expect(response_body.last).to include 'updated_at'
-        expect(response_body.last).to include 'vehicle'
-        expect(response_body.last['vehicle']).to include 'id'
-        expect(response_body.last['vehicle']).to include 'identifier'
+        expect(response_body.last.keys).to eq ['id',
+                                               'wui_type',
+                                               'status',
+                                               'updated_at',
+                                               'vehicle',
+                                               'action']
+
+        expect(response_body.last['vehicle'].keys).to eq ['id', 'identifier']
       end
 
       it 'includes the right action in the response' do
@@ -66,6 +66,74 @@ describe Api::V1::WuisController do
         expect(response_body.last).to include 'vehicle'
         expect(response_body.last['vehicle']['id']).to eq current_owner
           .vehicles.first.id
+      end
+    end
+  end
+
+  describe 'POST #create', authenticated_resource: true do
+    let(:action) { -> { post :create, request_params } }
+
+    context 'with valid parameters' do
+      let(:vehicle) { create(:vehicle, users: [current_owner]) }
+
+      let(:before_context) { vehicle }
+
+      let(:request_params) do
+        { wui_type: :crash, vehicle_identifier: vehicle.identifier }
+      end
+
+      context 'with successful pusher trigger' do
+        let(:notification) { double(:notification) }
+
+        let(:before_context) do
+          allow(controller).to receive(:notification_for)
+            .with(kind_of(Wui))
+            .and_return(notification)
+
+          expect(Pusher).to receive(:trigger)
+            .with(current_owner.id.to_s, 'wui_create', notification)
+        end
+
+        it { is_expected.to respond_with(201) }
+
+        it 'responds with right parameters' do
+          expect(response_body.keys).to eq ['id',
+                                            'wui_type',
+                                            'status',
+                                            'updated_at',
+                                            'vehicle']
+
+          expect(response_body['vehicle'].keys).to eq ['id', 'identifier']
+        end
+
+        it 'creates the wui with :sent status' do
+          expect(response_body['status']).to eq 'sent'
+        end
+      end
+
+      context 'with failing pusher trigger' do
+        let(:before_context) do
+          expect(Pusher).to receive(:trigger).and_raise(Pusher::Error)
+          expect(Rollbar).to receive(:error)
+        end
+
+        it { is_expected.to respond_with 500 }
+        it 'does not create the wui' do
+          expect(Wui.all.count).to eq 0
+        end
+      end
+    end
+
+    context 'with invalid parameters' do
+      context 'with unexisting vehicle' do
+        let(:request_params) do
+          { wui_type: '', vehicle_identifier: 'unexiststing' }
+        end
+
+        it { is_expected.to respond_with(422) }
+        it 'has validation errors' do
+          expect(response_body['errors'].keys).to eq ['wui_type', 'vehicle']
+        end
       end
     end
   end
