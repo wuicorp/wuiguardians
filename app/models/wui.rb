@@ -5,6 +5,8 @@ class Wui < ActiveRecord::Base
   validates_presence_of :wui_type
   validates_presence_of :user, :vehicle
 
+  before_create -> { self.status = :sent }
+
   def vehicle_user
     vehicle.user
   end

@@ -104,6 +104,10 @@ describe Api::V1::WuisController do
           expect(response_body['vehicle']).to include 'id'
           expect(response_body['vehicle']).to include 'identifier'
         end
+
+        it 'creates the wui with :sent status' do
+          expect(response_body['status']).to eq 'sent'
+        end
       end
 
       context 'with failing pusher trigger' do
