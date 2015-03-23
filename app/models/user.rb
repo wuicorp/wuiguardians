@@ -18,4 +18,11 @@ class User < ActiveRecord::Base
   def find_all_received_wuis
     Wui.where(vehicle_id: vehicles.map(&:id))
   end
+
+  def as_json(options = {})
+    super({
+      only: [:id, :email, :name],
+      include: { vehicles: { only: [:id, :identifier] } }
+    }.merge(options))
+  end
 end

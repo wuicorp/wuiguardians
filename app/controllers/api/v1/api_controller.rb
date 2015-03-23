@@ -16,6 +16,15 @@ module Api
         @current_application ||= Doorkeeper::Application.find(doorkeeper_token.application_id)
       end
 
+      def success(action, resource = nil)
+        case action
+        when :get
+          render json: resource.as_json, status: 200
+        when :create
+          render json: resource.as_json, status: 201
+        end
+      end
+
       def invalid_resource(resource)
         render json: { errors: resource.errors }, status: 422
       end

@@ -94,7 +94,12 @@ In booth cases, it returns the tokens required to access user resources, but als
             "token_type": "bearer",
             "user": {
                 "id": "1",
-                "email": "user@mail.com"
+                "email": "user@mail.com",
+                "name": "User Name",
+                "vehicles": [
+                  { "id": "1", "identifier": "6699CMZ" },
+                  { "id": "2", "identifier": "7777AYZ" }                  
+                ]
             }
         }
 
@@ -148,14 +153,8 @@ Retireves the user owner of the password-access-token.
             "email": "user@email.com",
             "name": "User Alias",
             "vehicles": [
-                {
-                    "id": "1",
-                    "identifier": "6699CMZ"
-                },
-                {
-                    "id": "2",
-                    "identifier": "7777AYZ"
-                }
+                { "id": "1", "identifier": "6699CMZ" },
+                { "id": "2", "identifier": "7777AYZ" }
             ]
         }
 

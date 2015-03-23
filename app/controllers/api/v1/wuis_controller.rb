@@ -9,7 +9,7 @@ module Api
         @wui = Wui.new(wui_params_for_create)
         if @wui.save
           Pusher.trigger(receiver_for(@wui), 'wui_create', notification_for(@wui))
-          render json: @wui.as_json, status: 201
+          success :create, @wui
         else
           invalid_resource @wui
         end
