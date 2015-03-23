@@ -20,8 +20,9 @@ module Api
         render json: { errors: resource.errors }, status: 422
       end
 
-      def third_party_error(e)
-        render json: { error: :third_party_error, description: e.as_json }, status: 400
+      def third_party_error(e, msg)
+        Rollbar.error(e, msg)
+        render json: e.as_json, status: 500
       end
     end
   end

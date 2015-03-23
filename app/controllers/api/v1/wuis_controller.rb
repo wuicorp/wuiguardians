@@ -15,7 +15,7 @@ module Api
         end
       rescue Pusher::Error => e
         @wui.destroy
-        third_party_error e
+        third_party_error e, 'Pusher.trigger error creating a Wui'
       end
 
       def update

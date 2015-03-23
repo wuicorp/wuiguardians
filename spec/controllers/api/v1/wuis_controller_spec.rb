@@ -109,9 +109,10 @@ describe Api::V1::WuisController do
       context 'with failing pusher trigger' do
         let(:before_context) do
           expect(Pusher).to receive(:trigger).and_raise(Pusher::Error)
+          expect(Rollbar).to receive(:error)
         end
 
-        it { is_expected.to respond_with 400 }
+        it { is_expected.to respond_with 500 }
         it 'does not create the wui' do
           expect(Wui.all.count).to eq 0
         end
