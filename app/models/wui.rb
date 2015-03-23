@@ -13,6 +13,6 @@ class Wui < ActiveRecord::Base
 
   def as_json(options = {})
     super({ only: [:id, :wui_type, :status, :updated_at],
-            include: [:vehicle] }.merge(options))
+            include: [vehicle: { only: [:id, :identifier] }] }.merge(options))
   end
 end
