@@ -297,3 +297,31 @@ This action creates a wui, but also sends it to to the required vehicle.
                 "identifier": "6699CMZ"
             }
         }
+
+## Wui [/wuis/{id}]
+### Update [PUT]
+Updates the Wui through it's {id}. 
+It's just permited to update the `status` attribute with the following values:
+*[received, truthy, falsey]*
+
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
+    + Body
+
+            { "status": "received" }
+
++ Response 200 (application/json)
+    
+        {
+            "id": "1",
+            "wui_type": "crash",
+            "status": "received",
+            "updated_at": "2015-03-23T14:29:30.278Z",
+            "vehicle": {
+                "id": "1"
+                "identifier": "6699CMZ"
+            }
+        }

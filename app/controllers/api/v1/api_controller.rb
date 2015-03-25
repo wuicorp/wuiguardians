@@ -18,7 +18,7 @@ module Api
 
       def success(action, resource = nil)
         case action
-        when :get
+        when :get, :update
           render json: resource.as_json, status: 200
         when :create
           render json: resource.as_json, status: 201
@@ -32,6 +32,19 @@ module Api
       def third_party_error(e, msg)
         Rollbar.error(e, msg)
         render json: e.as_json, status: 500
+      end
+
+      def invalid_parameters
+        error  = { errors: { invalid_request: 'No valid parameters found.' } }
+        render json: error, status: 400
+      end
+
+      def with_filtered_params(params, &block)
+        if params.empty?
+          invalid_parameters
+        else
+          block.call(params)
+        end
       end
     end
   end

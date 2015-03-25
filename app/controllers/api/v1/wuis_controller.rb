@@ -6,26 +6,32 @@ module Api
       end
 
       def create
-        @wui = Wui.new(wui_params_for_create)
-        if @wui.save
-          Pusher.trigger(receiver_for(@wui), 'wui_create', notification_for(@wui))
-          success :create, @wui
-        else
-          invalid_resource @wui
+        Wui.transaction do
+          @wui = Wui.new(wui_params_for_create)
+          if @wui.save
+            send_wui_notifications(@wui, 'wui-create')
+            success :create, @wui
+          else
+            invalid_resource @wui
+          end
         end
       rescue Pusher::Error => e
-        @wui.destroy
         third_party_error e, 'Pusher.trigger error creating a Wui'
       end
 
       def update
-        @wui = Wui.find_by_id(wui_id)
-        if @wui.update_attributes(wui_params_for_update)
-          Pusher[wui_destination].trigger('wui_update', message: msg)
-          render json: { result_type: :success }, status: 200
-        else
-          render json: @wui.as_json, status: 422
+        Wui.transaction do
+          with_filtered_params(wui_params_for_update) do |parameters|
+            if current_wui.update_attributes(parameters)
+              send_wui_notifications(current_wui, 'wui-update')
+              success :update, current_wui
+            else
+              invalid_resource current_wui
+            end
+          end
         end
+      rescue Pusher::Error => e
+        third_party_error e, 'Pusher.trigger error updating a Wui'
       end
 
       private
@@ -46,22 +52,28 @@ module Api
         (received_wuis + sent_wuis).sort_by { |w| w[:updated_at] }.reverse
       end
 
+      def send_wui_notifications(wui, message)
+        receivers_for(wui).each do |receiver|
+          Pusher.trigger(receiver.to_s, message, notification_for(wui))
+        end
+      end
+
       # Is just owner-receiver comunication, so the receiver is
       #   who is not the caller (current_owner).
-      def receiver_for(wui)
-        if wui.vehicle.users.includes(current_owner)
-          wui.user_id
+      def receivers_for(wui)
+        if wui.vehicle.belongs_to?(current_owner)
+          [wui.user_id]
         else
-          wui.vehicle_user_id
-        end.to_s
+          wui.vehicle_users.map(&:id)
+        end
       end
 
       def notification_for(wui)
         wui.as_json(methods: nil)
       end
 
-      def wui_id
-        params[:wui][:id] if params[:wui]
+      def current_wui
+        @current_wui ||= Wui.find_by(params[:id])
       end
 
       def wui_params_for_create
@@ -72,9 +84,7 @@ module Api
       end
 
       def wui_params_for_update
-        return unless params[:wui]
-        params.require(:wui)
-          .permit(:identifier, :utility)
+        params.permit(:status)
       end
 
       def vehicle_id_from_params
