@@ -6,4 +6,8 @@ class Vehicle < ActiveRecord::Base
   def as_json(options = {})
     super({ only: [:id, :identifier] }.merge(options))
   end
+
+  def belongs_to?(user)
+    users.include?(user)
+  end
 end
