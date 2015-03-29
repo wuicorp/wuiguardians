@@ -5,16 +5,16 @@ module Api
         @user = User.find_for_database_authentication(email: params[:email])
         if @user
           if @user.valid_password?(params[:password])
-            success
+            responder.success(:create, response_for_create)
           else
-            render json: { user: :unauthorized }, status: 401
+            responder.unauthorized
           end
         else
           @user = User.new(user_params)
           if @user.save
-            success
+            responder.success(:create, response_for_create)
           else
-            invalid_resource @user
+            responder.invalid_resource(@user)
           end
         end
       end
@@ -23,10 +23,6 @@ module Api
 
       def user_params
         params.permit(:email, :password, :password_confirmation)
-      end
-
-      def success
-        render json: response_for_create, status: 201
       end
 
       def response_for_create

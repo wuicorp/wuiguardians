@@ -5,9 +5,9 @@ module Api
         @vehicle = Vehicle.new(vehicle_params)
         @vehicle.users << current_owner
         if @vehicle.save
-          success :create, @vehicle
+          responder.success(:create, @vehicle)
         else
-          invalid_resource @vehicle
+          responder.invalid_resource(@vehicle)
         end
       end
 

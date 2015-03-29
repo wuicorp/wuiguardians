@@ -2,7 +2,7 @@ module Api
   module V1
     class WuisController < ApiController
       def index
-        render json: all_wuis, status: 200
+        responder.success(:get, all_wuis)
       end
 
       def create
@@ -10,13 +10,13 @@ module Api
           @wui = Wui.new(wui_params_for_create)
           if @wui.save
             send_wui_notifications(@wui, 'wui-create')
-            success :create, @wui
+            responder.success(:create, @wui)
           else
-            invalid_resource @wui
+            responder.invalid_resource(@wui)
           end
         end
       rescue Pusher::Error => e
-        third_party_error e, 'Pusher.trigger error creating a Wui'
+        responder.third_party_error(e, 'Pusher.trigger error creating a Wui')
       end
 
       def update
@@ -24,14 +24,14 @@ module Api
           with_filtered_params(wui_params_for_update) do |parameters|
             if current_wui.update_attributes(parameters)
               send_wui_notifications(current_wui, 'wui-update')
-              success :update, current_wui
+              responder.success(:update, current_wui)
             else
-              invalid_resource current_wui
+              responder.invalid_resource(current_wui)
             end
           end
         end
       rescue Pusher::Error => e
-        third_party_error e, 'Pusher.trigger error updating a Wui'
+        responder.third_party_error(e, 'Pusher.trigger error updating a Wui')
       end
 
       private
