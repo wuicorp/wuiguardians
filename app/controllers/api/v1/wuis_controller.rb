@@ -73,7 +73,7 @@ module Api
       end
 
       def current_wui
-        @current_wui ||= Wui.find_by(params[:id])
+        @current_wui ||= Wui.find_by(id: params[:id])
       end
 
       def wui_params_for_create
