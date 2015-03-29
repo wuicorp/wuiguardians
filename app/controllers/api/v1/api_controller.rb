@@ -1,6 +1,8 @@
 module Api
   module V1
     class ApiController < ::ApplicationController
+      include Api::V1::ResponseHelpers
+
       respond_to :json
       before_action :doorkeeper_authorize!
       skip_before_filter :verify_authenticity_token
@@ -16,22 +18,12 @@ module Api
         @current_application ||= Doorkeeper::Application.find(doorkeeper_token.application_id)
       end
 
-      def success(action, resource = nil)
-        case action
-        when :get
-          render json: resource.as_json, status: 200
-        when :create
-          render json: resource.as_json, status: 201
+      def with_filtered_params(params, &block)
+        if params.empty?
+          responder.invalid_parameters
+        else
+          block.call(params)
         end
-      end
-
-      def invalid_resource(resource)
-        render json: { errors: resource.errors }, status: 422
-      end
-
-      def third_party_error(e, msg)
-        Rollbar.error(e, msg)
-        render json: e.as_json, status: 500
       end
     end
   end
