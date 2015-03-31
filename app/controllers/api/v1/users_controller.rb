@@ -9,10 +9,12 @@ module Api
 
       def update
         with_current_user do |user|
-          if user.update_attributes(params_for_update)
-            responder.success(:update, user)
-          else
-            responder.invalid_resource(user)
+          with_filtered_params(params_for_update) do |params|
+            if user.update_attributes(params)
+              responder.success(:update, user)
+            else
+              responder.invalid_resource(user)
+            end
           end
         end
       end

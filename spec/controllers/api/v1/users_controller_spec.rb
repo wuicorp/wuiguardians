@@ -89,6 +89,11 @@ describe Api::V1::UsersController do
           expect(current_owner.reload.email).to_not eq new_email
         end
       end
+
+      context 'with not permited parameters' do
+        let(:before_context) { request_params.merge!(some: 'filtered') }
+        it { is_expected.to respond_with(400) }
+      end
     end
   end
 end
