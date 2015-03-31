@@ -62,16 +62,37 @@ describe Api::V1::UsersController do
 
       context 'with valid parameters' do
         let(:new_name) { 'new-name' }
-        let(:before_context) { request_params.merge!(name: new_name) }
+        let(:new_email) { 'new@email.com' }
+        let(:new_password) { 'new-secret' }
+        let(:new_params) do
+          { name: new_name,
+            email: new_email,
+            password: new_password }
+        end
+        let(:before_context) { request_params.merge!(new_params) }
 
         it { is_expected.to respond_with(200) }
 
         it 'responds with parameter updated' do
           expect(response_body['name']).to eq new_name
+          # Email Is not gonna be confirmed directly, so it's the older one
+          expect(response_body['email']).to_not eq new_name
         end
 
         it 'updates the user' do
-          expect(current_owner.reload.name).to eq new_name
+          current_owner.reload
+          expect(current_owner.name).to eq new_name
+          expect(current_owner.valid_password?(new_password)).to be true
+        end
+
+        context 'unconfirmed email' do
+          subject { current_owner.reload }
+          its(:email) { is_expected.to_not eq new_email }
+        end
+
+        context 'confirmed email' do
+          subject { current_owner.reload.tap { |u| u.confirm! } }
+          its(:email) { is_expected.to eq new_email }
         end
       end
 

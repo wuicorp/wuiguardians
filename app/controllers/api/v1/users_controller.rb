@@ -10,7 +10,7 @@ module Api
       def update
         with_current_user do |user|
           with_filtered_params(params_for_update) do |params|
-            if user.update_attributes(params)
+            if user.update(params)
               responder.success(:update, user)
             else
               responder.invalid_resource(user)
@@ -31,7 +31,9 @@ module Api
       end
 
       def params_for_update
-        params.permit(:email, :name)
+        params.permit(:email,
+                      :name,
+                      :password)
       end
     end
   end
