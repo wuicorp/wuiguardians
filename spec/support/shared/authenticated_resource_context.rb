@@ -6,7 +6,8 @@ shared_context 'authenticated resource', authenticated_resource: true do
   end
 
   let(:developer) { create(:user, role: 'developer') }
-  let(:current_owner) { create(:user) }
+  let(:current_owner_password) { 'owner-secret' }
+  let(:current_owner) { create(:user, password: current_owner_password) }
   let(:application) { create(:application, owner: developer) }
   let(:access_token) do
     create(:access_token,

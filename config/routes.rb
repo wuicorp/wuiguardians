@@ -18,13 +18,7 @@ Rails.application.routes.draw do
       end
 
       resources :sessions, only: [:create]
-
-      resources :users do
-        collection do
-          get :me
-        end
-      end
-
+      resources :users, only: [:show, :update]
       resources :vehicles, only: [:create]
       resources :wuis, only: [:index, :create, :update]
     end

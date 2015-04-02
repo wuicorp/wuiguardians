@@ -35,6 +35,10 @@ module Wuiguardians
           body = { errors: { user: 'unauthorized' } }
           controller.render json: body, status: 401
         end
+
+        def not_found
+          controller.render json: nil, status: 404
+        end
       end
     end
   end
