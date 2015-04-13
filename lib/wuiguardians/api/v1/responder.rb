@@ -10,7 +10,7 @@ module Wuiguardians
 
         def success(action, resource = nil)
           case action
-          when :get, :update
+          when :get, :update, :delete
             controller.render json: resource.as_json, status: 200
           when :create
             controller.render json: resource.as_json, status: 201

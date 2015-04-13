@@ -10,4 +10,8 @@ class Vehicle < ActiveRecord::Base
   def belongs_to?(user)
     users.include?(user)
   end
+
+  def just_belongs_to?(user)
+    belongs_to?(user) && users.count == 1
+  end
 end
