@@ -28,23 +28,6 @@ module Api
       def vehicle_params
         params.permit(:identifier)
       end
-
-      def with_current_owned_resource(&block)
-        if current_resource
-          if @current_resource.users.include?(current_owner)
-            block.call(current_resource)
-          else
-            responder.not_found
-          end
-        else
-          responder.not_found
-        end
-      end
-
-      def current_resource
-        klass = controller_name.singularize.camelize.constantize
-        @current_resource ||= klass.find_by(id: params[:id])
-      end
     end
   end
 end
