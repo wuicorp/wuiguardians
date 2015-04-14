@@ -25,6 +25,29 @@ module Api
           block.call(params)
         end
       end
+
+      def with_current_owned_resource(&block)
+        with_current_resource do |resource|
+          if resource.users.include?(current_owner)
+            block.call(resource)
+          else
+            responder.not_found
+          end
+        end
+      end
+
+      def with_current_resource(&block)
+        if current_resource
+          block.call(current_resource)
+        else
+          responder.not_found
+        end
+      end
+
+      def current_resource
+        klass = controller_name.singularize.camelize.constantize
+        @current_resource ||= klass.find_by(id: params[:id])
+      end
     end
   end
 end

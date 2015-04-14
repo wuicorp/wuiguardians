@@ -11,6 +11,18 @@ module Api
         end
       end
 
+      def destroy
+        with_current_owned_resource do |vehicle|
+          if vehicle.just_belongs_to?(current_owner)
+            vehicle.destroy
+          else
+            vehicle.users.delete(current_owner)
+          end
+
+          responder.success(:delete, vehicle)
+        end
+      end
+
       private
 
       def vehicle_params
