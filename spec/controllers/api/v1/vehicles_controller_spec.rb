@@ -3,6 +3,49 @@ require 'rails_helper'
 describe Api::V1::VehiclesController do
   it { is_expected.to be_a_kind_of Api::V1::ApiController }
 
+  describe 'GET #vehicles', authenticated_resource: true do
+    let(:action) { -> { get :index, {} } }
+
+    shared_examples 'success with list' do
+      it { is_expected.to respond_with(200) }
+
+      it 'responds with a list' do
+        expect(response_body).to be_a_kind_of Array
+      end
+    end
+
+    context 'owner without vehicles' do
+      it_behaves_like 'success with list'
+
+      it 'responds with empty list' do
+        expect(response_body).to be_empty
+      end
+    end
+
+    context 'owner with vehicles' do
+      let(:num_vehicles) { 5 }
+
+      let(:before_context) do
+        num_vehicles.times do
+          current_owner.vehicles << create(:vehicle)
+        end
+        current_owner.save!
+      end
+
+      it_behaves_like 'success with list'
+
+      it 'responds with none empty list' do
+        expect(response_body.count).to eq num_vehicles
+      end
+
+      it 'vehicles include right attributes' do
+        vehicle = response_body.first
+        expect(vehicle).to include 'id'
+        expect(vehicle).to include 'identifier'
+      end
+    end
+  end
+
   describe 'POST #create', authenticated_resource: true do
     let(:action) { -> { post :create, request_params } }
 
