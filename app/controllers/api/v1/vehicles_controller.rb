@@ -1,6 +1,10 @@
 module Api
   module V1
     class VehiclesController < ApiController
+      def index
+        responder.success(:get, current_owner.vehicles)
+      end
+
       def create
         @vehicle = Vehicle.new(vehicle_params)
         @vehicle.users << current_owner
