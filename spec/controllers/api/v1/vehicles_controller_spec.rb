@@ -67,6 +67,53 @@ describe Api::V1::VehiclesController do
     end
   end
 
+  describe 'PUT #vehicle', authenticated_resource: true do
+    let(:action) { -> { put :update, request_params } }
+
+    let(:vehicle) { create(:vehicle) }
+
+    let(:before_context) do
+      current_owner.vehicles << vehicle
+      current_owner.save!
+    end
+
+    let(:request_params) { { id: vehicle.id }.merge(params_for_update) }
+
+    context 'with valid parameters' do
+      let(:new_value) { '6699CMZ' }
+      let(:params_for_update) { { identifier: new_value } }
+
+      it { is_expected.to respond_with(200) }
+
+      it 'updates the vehicle' do
+        expect(vehicle.reload.identifier).to eq new_value
+      end
+
+      it 'responds with updated vehicle' do
+        expect(response_body['identifier']).to eq new_value
+      end
+    end
+
+    context 'with invalid parameters' do
+      let(:params_for_update) { { identifier: '' } }
+
+      it { is_expected.to respond_with(422) }
+
+      it 'does not update the vehicle' do
+        expect(vehicle.reload.identifier).to_not be_blank
+      end
+
+      it 'responds with validation errors' do
+        expect(response_body['errors']).to include 'identifier'
+      end
+    end
+
+    context 'with not permited parameters' do
+      let(:params_for_update) { { not_permited: 'foo' } }
+      it { is_expected.to respond_with(400) }
+    end
+  end
+
   describe 'DELETE #vehicle', authenticated_resource: true do
     let(:action) { -> { delete :destroy, request_params } }
 
