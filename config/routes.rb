@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
       resources :sessions, only: [:create]
       resources :users, only: [:show, :update]
-      resources :vehicles, only: [:index, :create, :destroy]
+      resources :vehicles, only: [:index, :create, :update, :destroy]
       resources :wuis, only: [:index, :create, :update]
     end
   end
