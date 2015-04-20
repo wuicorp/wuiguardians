@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :vehicle do
-    identifier Faker::Number.number(7)
+    sequence(:identifier) { |n| "#{n}CMZ" }
   end
 end
