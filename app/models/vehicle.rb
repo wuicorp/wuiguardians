@@ -15,4 +15,9 @@ class Vehicle < ActiveRecord::Base
   def just_belongs_to?(user)
     belongs_to?(user) && users.count == 1
   end
+
+  def identifier=(value)
+    formated = value.present? ? value.to_s.gsub(/[^0-9A-Za-z]/, '').upcase : nil
+    super(formated)
+  end
 end
