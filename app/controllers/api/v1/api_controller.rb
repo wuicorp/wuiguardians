@@ -28,7 +28,7 @@ module Api
 
       def with_current_owned_resource(&block)
         with_current_resource do |resource|
-          if resource.users.include?(current_owner)
+          if resource.owned_by?(current_owner)
             block.call(resource)
           else
             responder.not_found
