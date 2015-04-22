@@ -16,4 +16,8 @@ class Wui < ActiveRecord::Base
   def vehicle_users
     vehicle.users
   end
+
+  def owned_by?(user_to_check)
+    user_to_check == user || vehicle_users.include?(user_to_check)
+  end
 end

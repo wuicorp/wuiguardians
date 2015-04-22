@@ -170,10 +170,12 @@ describe Api::V1::WuisController do
     let(:action) { -> { put :update, request_params.merge(id: wui.id) } }
 
     let(:wui) do
-      current_owner.vehicles << create(:vehicle)
-      current_owner.save!
-      create(:wui, vehicle: current_owner.vehicles.first)
+      receiver.vehicles << create(:vehicle)
+      receiver.save!
+      create(:wui, vehicle: receiver.vehicles.first)
     end
+
+    let(:receiver) { current_owner }
 
     let(:before_context) { wui }
 
@@ -224,6 +226,11 @@ describe Api::V1::WuisController do
         it 'does not update the wui' do
           expect(wui.reload.status).to_not eq new_status
         end
+      end
+
+      context 'with not owner caller' do
+        let(:receiver) { create(:user) }
+        it { is_expected.to respond_with(404) }
       end
     end
 
