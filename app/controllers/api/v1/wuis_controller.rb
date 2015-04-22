@@ -21,12 +21,14 @@ module Api
 
       def update
         Wui.transaction do
-          with_filtered_params(wui_params_for_update) do |parameters|
-            if current_wui.update_attributes(parameters)
-              send_wui_notifications(current_wui, 'wui-update')
-              responder.success(:update, current_wui)
-            else
-              responder.invalid_resource(current_wui)
+          with_current_owned_resource do |wui|
+            with_filtered_params(wui_params_for_update) do |parameters|
+              if wui.update_attributes(parameters)
+                send_wui_notifications(wui, 'wui-update')
+                responder.success(:update, wui)
+              else
+                responder.invalid_resource(wui)
+              end
             end
           end
         end
