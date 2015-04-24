@@ -5,9 +5,9 @@
   = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
   = javascript_include_tag 'application', 'data-turbolinks-track' => true
   = csrf_meta_tags
+  %meta{:name => "viewport", :content => "width=device-width, initial-scale=1"}
 
 %body{:id => "page-top", "data-spy" => "scroll", "data-target" => ".navbar-fixed-top"}
-
   %section{:id => "intro", :class => "intro-section"}
     .container
       .row
@@ -16,7 +16,6 @@
           %br
           %a{:class => "page-scroll", :href => "#about1"}
             = image_tag('down_arrow.png', class: 'img-responsive center-block')
-
   %section{:id => "about1", :class => "about-section"}
     .container
       .row
@@ -26,7 +25,6 @@
           %br
           %a{:class => "page-scroll", :href => "#about2"}
             = image_tag('down_arrow.png', class: 'img-responsive center-block')
-
   %section{:id => "about2", :class => "about-section"}
     .container
       .row
@@ -36,7 +34,6 @@
           %br
           %a{:class => "page-scroll", :href => "#about3"}
             = image_tag('down_arrow.png', class: 'img-responsive center-block')
-
   %section{:id => "about3", :class => "about-section"}
     .container
       .row
