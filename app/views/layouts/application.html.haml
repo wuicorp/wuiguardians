@@ -7,59 +7,43 @@
   = csrf_meta_tags
 
 %body{:id => "page-top", "data-spy" => "scroll", "data-target" => ".navbar-fixed-top"}
-  %nav{:class => "navbar navbar-default navbar-fixed-top", :role => "navigation"}
-    .container
-      .navbar-header.page-scroll
-        %button{:type => "button", :class => "navbar-toggle", "data-toggle" => "collapse", "data-target" => ".navbar-ex1-collapse"}
-          %span{:class => "sr-only"} Toggle navigation
-          %span{:class => "icon-bar"}
-          %span{:class => "icon-bar"}
-          %span{:class => "icon-bar"}
-        %a{:class => "navbar-brand page-scroll", :href => "#page-top"} Start Bootstrap
-
-      .collapse.navbar-collapse.navbar-ex1-collapse
-        %ul{:class => "nav navbar-nav"}
-          %li{:class => "hidden"}
-            %a{:class => "page-scroll", :href => "#page-top"}
-          %li
-            %a{:class => "page-scroll", :href => "#about"} About
-          %li
-            %a{:class => "page-scroll", :href => "#services"} Services
-          %li
-            %a{:class => "page-scroll", :href => "#contact"} Contact
 
   %section{:id => "intro", :class => "intro-section"}
     .container
       .row
         .col-lg-12
-          %h1 Scrolling Nav
-          %p 
-            %strong Usage Instructions:
-            Make sure to include the 
-            %code scrolling-nav.js
-            , 
-            %code jquery.easing.min.js
-            , and 
-            %code scrolling-nav.css
-            files. To make a link smooth scroll to another section on the page, give the link the 
-            %code .page-scroll 
-            class and set the link target to a corresponding ID on the page.
-          %a{:class => "btn btn-default page-scroll", :href => "#about"} Click Me to Scroll Down!
+          = image_tag('main_page_logo.png', class: 'img-responsive center-block')
+          %br
+          %a{:class => "page-scroll", :href => "#about1"}
+            = image_tag('down_arrow.png', class: 'img-responsive center-block')
 
-  %section{:id => "about", :class => "about-section"}
+  %section{:id => "about1", :class => "about-section"}
     .container
       .row
         .col-lg-12
-          %h1 About Section
+          %p{:class => "lead"}
+            Something special is gonna happen...
+          %br
+          %a{:class => "page-scroll", :href => "#about2"}
+            = image_tag('down_arrow.png', class: 'img-responsive center-block')
 
-  %section{:id => "services", :class => "services-section"}
+  %section{:id => "about2", :class => "about-section"}
     .container
       .row
         .col-lg-12
-          %h1 Services Section
+          %p{:class => "lead"}
+            comming soon...
+          %br
+          %a{:class => "page-scroll", :href => "#about3"}
+            = image_tag('down_arrow.png', class: 'img-responsive center-block')
 
-  %section{:id => "contact", :class => "contact-section"}
+  %section{:id => "about3", :class => "about-section"}
     .container
       .row
         .col-lg-12
-          %h1 Contact Section
+          %a{:class => "page-scroll", :href => "#intro"}
+            = image_tag('up_arrow.png', class: 'img-responsive center-block')
+          %br
+          %br
+          %p{:class => "lead"}
+            %strong WÜI Guardians
