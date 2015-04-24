@@ -8,6 +8,9 @@ gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jquery-rails'
+gem 'jquery-easing-rails'
+gem 'bootstrap-sass', '~> 3.3.4.1'
+gem 'haml', '~> 4.0.6'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'

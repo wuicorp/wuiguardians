@@ -1,0 +1,49 @@
+!!!
+%html
+%head
+  %title wuiguardians
+  = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+  = javascript_include_tag 'application', 'data-turbolinks-track' => true
+  = csrf_meta_tags
+
+%body{:id => "page-top", "data-spy" => "scroll", "data-target" => ".navbar-fixed-top"}
+
+  %section{:id => "intro", :class => "intro-section"}
+    .container
+      .row
+        .col-lg-12
+          = image_tag('main_page_logo.png', class: 'img-responsive center-block')
+          %br
+          %a{:class => "page-scroll", :href => "#about1"}
+            = image_tag('down_arrow.png', class: 'img-responsive center-block')
+
+  %section{:id => "about1", :class => "about-section"}
+    .container
+      .row
+        .col-lg-12
+          %p{:class => "lead"}
+            Something special is gonna happen...
+          %br
+          %a{:class => "page-scroll", :href => "#about2"}
+            = image_tag('down_arrow.png', class: 'img-responsive center-block')
+
+  %section{:id => "about2", :class => "about-section"}
+    .container
+      .row
+        .col-lg-12
+          %p{:class => "lead"}
+            comming soon...
+          %br
+          %a{:class => "page-scroll", :href => "#about3"}
+            = image_tag('down_arrow.png', class: 'img-responsive center-block')
+
+  %section{:id => "about3", :class => "about-section"}
+    .container
+      .row
+        .col-lg-12
+          %a{:class => "page-scroll", :href => "#intro"}
+            = image_tag('up_arrow.png', class: 'img-responsive center-block')
+          %br
+          %br
+          %p{:class => "lead"}
+            %strong WÜI Guardians
