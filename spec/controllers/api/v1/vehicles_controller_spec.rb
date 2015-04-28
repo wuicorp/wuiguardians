@@ -23,7 +23,7 @@ describe Api::V1::VehiclesController do
     end
 
     context 'owner with vehicles' do
-      let(:num_vehicles) { 5 }
+      let(:num_vehicles) { 50 }
 
       let(:before_context) do
         num_vehicles.times do
@@ -35,7 +35,11 @@ describe Api::V1::VehiclesController do
       it_behaves_like 'success with list'
 
       it 'responds with none empty list' do
-        expect(response_body.count).to eq num_vehicles
+        expect(response_body).to_not be_empty
+      end
+
+      it 'respondes with default per page' do
+        expect(response_body.count).to eq Kaminari.config.default_per_page
       end
 
       it 'vehicles include right attributes' do
