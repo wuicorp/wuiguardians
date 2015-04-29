@@ -49,3 +49,6 @@ gem 'faker', '~> 1.4.3', group: :test
 gem 'dotenv-rails', groups: [:development, :test]
 
 gem 'mailcatcher', group: :development
+
+gem 'kaminari', '~> 0.16.3'
+gem 'api-pagination', '~> 4.1.1'

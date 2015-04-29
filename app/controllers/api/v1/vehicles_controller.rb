@@ -2,7 +2,8 @@ module Api
   module V1
     class VehiclesController < ApiController
       def index
-        responder.success(:get, current_owner.vehicles)
+        vehicles = paginate(current_owner.vehicles)
+        responder.success(:get, vehicles)
       end
 
       def create
