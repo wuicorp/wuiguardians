@@ -3,8 +3,72 @@ require 'rails_helper'
 describe Api::V1::WuisController do
   it { is_expected.to be_a_kind_of Api::V1::ApiController }
 
-  describe 'GET #index', authenticated_resource: true do
-    let(:action) { -> { get :index } }
+  describe 'GET #sent', authenticated_resource: true do
+    let(:action) { -> { get :sent } }
+
+    it { is_expected.to respond_with 200 }
+
+    context 'without existing wuis' do
+      it 'responds with empty list' do
+        expect(response_body).to eq []
+      end
+    end
+
+    context 'with sent and received wuis' do
+      let(:received_wui) do
+        sender = create(:user)
+        vehicle = build(:vehicle)
+        vehicle.users << current_owner
+        create(:wui,
+               user: sender,
+               vehicle: vehicle,
+               updated_at: 2.minutes.ago)
+      end
+
+      let(:sent_wui) do
+        receiver = create(:user)
+        vehicle = build(:vehicle)
+        vehicle.users << receiver
+        create(:wui,
+               user: current_owner,
+               vehicle: vehicle,
+               updated_at: 1.minute.ago)
+      end
+
+      let(:before_context) do
+        received_wui
+        sent_wui
+      end
+
+      it 'responds with sent wuis list' do
+        expect(response_body.count).to eq 1
+        expect(response_body.first['id']).to eq sent_wui.id
+      end
+
+      it 'includes the expected attributes in the response' do
+        expect(response_body.last.keys).to eq ['id',
+                                               'wui_type',
+                                               'status',
+                                               'updated_at',
+                                               'vehicle',
+                                               'action']
+
+        expect(response_body.first['vehicle'].keys).to eq ['id', 'identifier']
+      end
+
+      it 'includes the right action in the response' do
+        expect(response_body.first['action']).to eq 'sent'
+      end
+
+      it 'includes the right vehicle in the response' do
+        expect(response_body.first).to include 'vehicle'
+        expect(response_body.first['vehicle']['id']).to eq sent_wui.vehicle.id
+      end
+    end
+  end
+
+  describe 'GET #received', authenticated_resource: true do
+    let(:action) { -> { get :received } }
 
     it { is_expected.to respond_with 200 }
 
@@ -41,9 +105,8 @@ describe Api::V1::WuisController do
       end
 
       it 'responds with wuis list' do
-        expect(response_body.count).to eq 2
-        expect(response_body.last['id']).to eq received_wui.id
-        expect(response_body.first['id']).to eq sent_wui.id
+        expect(response_body.count).to eq 1
+        expect(response_body.first['id']).to eq received_wui.id
       end
 
       it 'includes the expected attributes in the response' do
@@ -54,18 +117,16 @@ describe Api::V1::WuisController do
                                                'vehicle',
                                                'action']
 
-        expect(response_body.last['vehicle'].keys).to eq ['id', 'identifier']
+        expect(response_body.first['vehicle'].keys).to eq ['id', 'identifier']
       end
 
       it 'includes the right action in the response' do
-        expect(response_body.last['action']).to eq 'received'
-        expect(response_body.first['action']).to eq 'sent'
+        expect(response_body.first['action']).to eq 'received'
       end
 
       it 'includes the right vehicle in the response' do
-        expect(response_body.last).to include 'vehicle'
-        expect(response_body.last['vehicle']['id']).to eq current_owner
-          .vehicles.first.id
+        expect(response_body.first).to include 'vehicle'
+        expect(response_body.first['vehicle']['id']).to eq received_wui.vehicle.id
       end
     end
   end

@@ -20,7 +20,13 @@ Rails.application.routes.draw do
       resources :sessions, only: [:create]
       resources :users, only: [:show, :update]
       resources :vehicles, only: [:index, :create, :update, :destroy]
-      resources :wuis, only: [:index, :create, :update]
+
+      resources :wuis, only: [:create, :update] do
+        collection do
+          get 'sent'
+          get 'received'
+        end
+      end
     end
   end
 end

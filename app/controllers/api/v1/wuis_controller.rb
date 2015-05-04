@@ -1,8 +1,12 @@
 module Api
   module V1
     class WuisController < ApiController
-      def index
-        responder.success(:get, all_wuis)
+      def sent
+        responder.success(:get, sent_wuis)
+      end
+
+      def received
+        responder.success(:get, received_wuis)
       end
 
       def create
@@ -48,10 +52,6 @@ module Api
         current_owner.wuis.to_a.map do |wui|
           wui.as_json.merge(action: :sent)
         end
-      end
-
-      def all_wuis
-        (received_wuis + sent_wuis).sort_by { |w| w[:updated_at] }.reverse
       end
 
       def send_wui_notifications(wui, message)
