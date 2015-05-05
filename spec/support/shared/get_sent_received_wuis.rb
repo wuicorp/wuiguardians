@@ -60,5 +60,10 @@ shared_examples 'get sent or received wuis' do |wuis_action|
       expect(response_body.first['vehicle']['id'])
         .to eq send(wuis_action).vehicle.id
     end
+
+    it 'responds with pagination' do
+      expect(response.headers.keys).to include 'Per-Page'
+      expect(response.headers.keys).to include 'Total'
+    end
   end  
 end

@@ -2,11 +2,13 @@ module Api
   module V1
     class WuisController < ApiController
       def sent
-        responder.success(:get, sent_wuis)
+        wuis = paginate(sent_wuis)
+        responder.success(:get, wuis)
       end
 
       def received
-        responder.success(:get, received_wuis)
+        wuis = paginate(received_wuis)
+        responder.success(:get, wuis)
       end
 
       def create
