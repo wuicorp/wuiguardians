@@ -46,13 +46,13 @@ module Api
 
       def received_wuis
         current_owner.find_all_received_wuis.to_a.map do |wui|
-          wui.as_json.merge(action: :received)
+          wui.as_json
         end
       end
 
       def sent_wuis
         current_owner.wuis.to_a.map do |wui|
-          wui.as_json.merge(action: :sent)
+          wui.as_json
         end
       end
 

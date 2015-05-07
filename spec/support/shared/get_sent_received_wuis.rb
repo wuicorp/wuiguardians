@@ -45,14 +45,9 @@ shared_examples 'get sent or received wuis' do |wuis_action|
                                              'wui_type',
                                              'status',
                                              'updated_at',
-                                             'vehicle',
-                                             'action']
+                                             'vehicle']
 
       expect(response_body.first['vehicle'].keys).to eq ['id', 'identifier']
-    end
-
-    it 'includes the right action in the response' do
-      expect(response_body.first['action']).to eq wuis_action.to_s
     end
 
     it 'includes the right vehicle in the response' do
