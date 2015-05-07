@@ -204,7 +204,7 @@ See also [api-pagination](https://github.com/davidcelis/api-pagination) to under
             
     + Body
     
-            [  
+            [
                 { "id": "26", "identifier": "6699CMZ" },
                 { "id": "27", "identifier": "7777AYZ" }
             ]
@@ -250,9 +250,10 @@ Create vehicle for the password-access-token owner.
 
 
 # Group Wuis
-## Wuis Collection [/wuis]
+## Sent Wuis Collection [/wuis/sent?page=2]
 ### Get [GET]
-Get all wuis sent and received for the password-access-token owner.
+Get all sent wuis for the password-access-token owner.
+The response for this method is paginated.
 
 + Request
     + Headers
@@ -260,29 +261,74 @@ Get all wuis sent and received for the password-access-token owner.
             Authorization: Bearer <password-access-token>
 
 + Response 200 (application/json)
+    + Headers
     
-        [{
-            "id": "1",
-            "wui_type": "crash",
-            "action": "sent",
-            "status": "pending",
-            "updated_at": "2015-03-18T18:16:55.349Z",
-            "vehicle": {
+            Link: <http://private-a46a-wuiguardians.apiary-mock.com/vehicles?page=1>; rel="first", <http://private-a46a-wuiguardians.apiary-mock.com/vehicles?page=1>; rel="prev"
+            Per-Page: 25
+            Total: 27
+
+    + Body
+    
+            [{
                 "id": "1",
-                "identifier": "6699CMZ"
-            }
-        },
-        {
-            "id": "3",
-            "wui_type": "park",
-            "action": "received",
-            "status": "confirmed",
-            "updated_at": "2015-03-18T18:15:55.329Z",
-            "vehicle": {
+                "wui_type": "crash",
+                "status": "pending",
+                "updated_at": "2015-03-18T18:16:55.349Z",
+                "vehicle": {
+                    "id": "1",
+                    "identifier": "6699CMZ"
+                }
+            },
+            {
                 "id": "3",
-                "identifier": "7777JPQ"
-            }
-        }]
+                "wui_type": "park",
+                "status": "confirmed",
+                "updated_at": "2015-03-18T18:15:55.329Z",
+                "vehicle": {
+                    "id": "3",
+                    "identifier": "7777JPQ"
+                }
+            }]
+
+## Sent Wuis Collection [/wuis/received?page=2]
+### Get [GET]
+Get all received wuis for the password-access-token owner.
+The response for this method is paginated.
+
++ Request
+    + Headers
+
+            Authorization: Bearer <password-access-token>
+
++ Response 200 (application/json)
+    + Headers
+    
+            Link: <http://private-a46a-wuiguardians.apiary-mock.com/vehicles?page=1>; rel="first", <http://private-a46a-wuiguardians.apiary-mock.com/vehicles?page=1>; rel="prev"
+            Per-Page: 25
+            Total: 27
+
+    + Body
+    
+            [{
+                "id": "2",
+                "wui_type": "light",
+                "status": "pending",
+                "updated_at": "2015-03-18T18:16:55.349Z",
+                "vehicle": {
+                    "id": "1",
+                    "identifier": "6699CMZ"
+                }
+            },
+            {
+                "id": "4",
+                "wui_type": "key",
+                "status": "confirmed",
+                "updated_at": "2015-03-18T18:15:55.329Z",
+                "vehicle": {
+                    "id": "3",
+                    "identifier": "7777JPQ"
+                }
+            }]
 
 ### Create "Send" [POST]
 This action creates a wui, but also sends it to to the required vehicle.
