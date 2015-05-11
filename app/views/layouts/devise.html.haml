@@ -1,0 +1,14 @@
+!!!
+%html
+%head
+  %title wuiguardians
+  = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+  = javascript_include_tag 'application', 'data-turbolinks-track' => true
+  = csrf_meta_tags
+  %meta{:name => "viewport", :content => "width=device-width, initial-scale=1"}
+
+%body{:id => "page-top", "data-spy" => "scroll", "data-target" => ".navbar-fixed-top"}
+  .container
+    .row
+      .col-lg-12
+        = yield
