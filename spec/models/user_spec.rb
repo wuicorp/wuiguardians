@@ -4,6 +4,7 @@ describe User do
   it { should have_many(:wuis) }
   it { should have_and_belong_to_many(:vehicles) }
   it { should accept_nested_attributes_for(:vehicles) }
+  it { should have_many(:flags) }
 
   describe '#developer?' do
     subject { build(:user, role: 'developer').developer? }

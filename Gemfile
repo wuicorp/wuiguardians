@@ -33,6 +33,7 @@ gem 'rails_12factor', group: :production
 gem 'puma'
 gem 'doorkeeper', '~> 2.2.1'
 gem 'devise', '~> 3.4.1'
+gem 'oauth2'
 
 gem 'pusher', '~> 0.14.4'
 gem 'rollbar', '~> 1.3.0'
@@ -41,11 +42,14 @@ gem 'byebug'
 
 gem 'phonelib'
 
-gem 'rspec-rails', '~> 3.1.0', group: :test
-gem 'rspec-its', '~> 1.2.0', group: :test
-gem 'shoulda-matchers', '~> 2.7.0', group: :test
-gem 'factory_girl', '~> 4.5.0', group: :test
-gem 'faker', '~> 1.4.3', group: :test
+group :test do
+  gem 'rspec-rails', '~> 3.1.0'
+  gem 'rspec-its', '~> 1.2.0'
+  gem 'shoulda-matchers', '~> 2.7.0'
+  gem 'shoulda-callback-matchers', '~> 1.1.3'
+  gem 'factory_girl', '~> 4.5.0'
+  gem 'faker', '~> 1.4.3'
+end
 
 gem 'dotenv-rails', groups: [:development, :test]
 
