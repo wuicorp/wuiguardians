@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resources :sessions, only: [:create]
       resources :users, only: [:show, :update]
       resources :vehicles, only: [:index, :create, :update, :destroy]
+      resources :flags, only: [:create]
 
       resources :wuis, only: [:create, :update] do
         collection do
