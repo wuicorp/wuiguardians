@@ -25,6 +25,10 @@ describe Api::V1::FlagsController do
         expect(response_body).to include 'latitude'
         expect(response_body).to include 'radius'
       end
+
+      it 'creates the flag' do
+        expect(Flag.count).to eq 1
+      end
     end
 
     context 'with invalid parameters' do
