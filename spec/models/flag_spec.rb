@@ -12,19 +12,6 @@ describe Flag do
   it { is_expected.to validate_numericality_of :latitude }
   it { is_expected.to validate_numericality_of :radius }
 
-  it { is_expected.to callback(:add_to_wuinloc).after(:save) }
-
-  describe '#add_to_winloc' do
-    let(:params_for_wuinloc) { flag.params_for_wuinloc }
-
-    it 'saves the flag to winloc' do
-      expect(flag.wuinloc_service)
-        .to receive(:save_flag).with(params_for_wuinloc)
-
-      flag.add_to_wuinloc
-    end
-  end
-
   describe '#params_for_wuinloc' do
     let(:expected_params) do
       { id: flag.id,

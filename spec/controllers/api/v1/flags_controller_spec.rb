@@ -13,10 +13,6 @@ describe Api::V1::FlagsController do
           radius: '10' }
       end
 
-      let(:before_context) do
-        expect_any_instance_of(Wuinloc::Service).to receive(:save_flag)
-      end
-
       it { is_expected.to respond_with(201) }
 
       it 'responds with created flag' do
