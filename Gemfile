@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.1.2'
+ruby '2.2.3'
 
 gem 'rails', '4.1.6'
 
@@ -24,7 +24,6 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring', group: :development
 
-gem 'sqlite3', group: :development
 gem 'pg'
 
 # Serve static assets to make rails 4 work with heroku

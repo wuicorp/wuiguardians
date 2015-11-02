@@ -1,6 +1,4 @@
 class Flag < ActiveRecord::Base
-  include Wuinloc::Support
-
   belongs_to :user
 
   validates_presence_of :longitude, :latitude, :radius
@@ -8,16 +6,20 @@ class Flag < ActiveRecord::Base
   validates_numericality_of :latitude
   validates_numericality_of :radius
 
-  after_save :add_to_wuinloc
-
-  def add_to_wuinloc
-    wuinloc_service.save_flag(params_for_wuinloc)
-  end
-
   def params_for_wuinloc
     { id: id,
       longitude: longitude,
       latitude: latitude,
       radius: radius }
+  end
+
+  def self.at(latitude, longitude)
+    m_per_deg_lat = 111_132.954 - 559.822 * Math.cos(2 * latitude) + 1.175 * Math.cos(4 * latitude)
+    m_per_deg_lon = 111_132.954 * Math.cos(latitude)
+
+    where('sqrt(' \
+          "power((longitude - #{longitude}) * #{m_per_deg_lon}, 2) + " \
+          "power(((latitude - #{latitude}) * #{m_per_deg_lat}), 2)" \
+          ') < radius')
   end
 end
