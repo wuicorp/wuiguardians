@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Api::V1::SessionsController do
+describe Api::V1::RegistrationsController do
   describe 'POST #create' do
     it { is_expected.to be_a_kind_of Api::V1::ApiController }
 
@@ -46,19 +46,15 @@ describe Api::V1::SessionsController do
 
       context 'with existing user', authenticated_resource: true do
         let(:user) { create(:user) }
-        let(:email) { user.email }
-        let(:password) { user.password }
 
-        context 'with right authentication parameters' do
-          let(:request_params) do
-            { email: email, password: password }
-          end
-          it_behaves_like 'successful response'
+        let(:request_params) do
+          { email: user.email, password: user.password }
         end
 
-        context 'with wrong authentication parameters' do
-          let(:request_params) { { email: email, password: 'foo' } }
-          it { is_expected.to respond_with(401) }
+        it { is_expected.to respond_with(422) }
+        it 'responds taken error' do
+          expect(response_body['errors']['email'].first)
+            .to eq I18n.t('errors.messages.taken')
         end
       end
     end
