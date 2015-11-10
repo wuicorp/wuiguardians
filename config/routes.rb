@@ -17,7 +17,7 @@ Rails.application.routes.draw do
         controllers applications: 'oauth/applications'
       end
 
-      resources :sessions, only: [:create]
+      resources :registrations, only: [:create]
       resources :users, only: [:show, :update]
       resources :vehicles, only: [:index, :create, :update, :destroy]
       resources :flags, only: [:create]

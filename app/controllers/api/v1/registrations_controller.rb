@@ -1,21 +1,12 @@
 module Api
   module V1
-    class SessionsController < ApiController
+    class RegistrationsController < ApiController
       def create
-        @user = User.find_for_database_authentication(email: params[:email])
-        if @user
-          if @user.valid_password?(params[:password])
-            responder.success(:create, response_for_create)
-          else
-            responder.unauthorized
-          end
+        @user = User.new(user_params)
+        if @user.save
+          responder.success(:create, response_for_create)
         else
-          @user = User.new(user_params)
-          if @user.save
-            responder.success(:create, response_for_create)
-          else
-            responder.invalid_resource(@user)
-          end
+          responder.invalid_resource(@user)
         end
       end
 
