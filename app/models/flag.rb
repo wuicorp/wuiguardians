@@ -13,7 +13,9 @@ class Flag < ActiveRecord::Base
       radius: radius }
   end
 
-  def self.at(latitude, longitude)
+  def self.at(latitude: nil, longitude: nil)
+    return [] unless latitude && longitude
+
     m_per_deg_lat = 111_132.954 - 559.822 * Math.cos(2 * latitude) + 1.175 * Math.cos(4 * latitude)
     m_per_deg_lon = 111_132.954 * Math.cos(latitude)
 

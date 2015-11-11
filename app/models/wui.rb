@@ -42,6 +42,7 @@ class Wui < ActiveRecord::Base
 
   def flag_users
     return unless longitude.present? && latitude.present?
-    @flag_users ||= Flag.at(longitude, latitude).map(&:user)
+    @flag_users ||=
+      Flag.at(latitude: latitude, longitude: longitude).map(&:user)
   end
 end
