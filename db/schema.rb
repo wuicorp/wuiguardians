@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150526175051) do
+ActiveRecord::Schema.define(version: 20151103081205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,14 @@ ActiveRecord::Schema.define(version: 20150526175051) do
     t.datetime "updated_at"
   end
 
+  create_table "users_wuis", force: true do |t|
+    t.integer "user_id"
+    t.integer "wui_id"
+  end
+
+  add_index "users_wuis", ["user_id"], name: "index_users_wuis_on_user_id", using: :btree
+  add_index "users_wuis", ["wui_id"], name: "index_users_wuis_on_wui_id", using: :btree
+
   create_table "vehicles", force: true do |t|
     t.string   "identifier"
     t.datetime "created_at"
@@ -117,6 +125,8 @@ ActiveRecord::Schema.define(version: 20150526175051) do
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
 end

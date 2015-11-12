@@ -25,6 +25,10 @@ describe Api::V1::FlagsController do
       it 'creates the flag' do
         expect(Flag.count).to eq 1
       end
+
+      it 'created flag belongs to the current owner' do
+        expect(Flag.last.user).to eq current_owner
+      end
     end
 
     context 'with invalid parameters' do

@@ -16,80 +16,114 @@ describe Api::V1::WuisController do
 
     context 'with valid parameters' do
       let(:request_params) do
-        { wui_type: 'crash', vehicle_identifier: vehicle.identifier }
+        { wui_type: 'crash' }.merge(victim_params)
       end
 
-      context 'with just one receiver' do
-        let(:vehicle) { create(:vehicle, users: [current_owner]) }
-        let(:before_context) { vehicle }
+      let(:notification) { double(:notification) }
 
-        context 'with successful pusher trigger' do
+      context 'with position' do
+        let(:flag) { create(:flag, user: current_owner) }
+
+        let(:victim_params) do
+          { latitude: flag.latitude, longitude: flag.longitude }
+        end
+
+        let(:before_context) do
+          allow(controller)
+            .to receive(:notification_for).with(kind_of(Wui)).and_return(notification)
+
+          expect(Pusher)
+            .to receive(:trigger).with(current_owner.id.to_s, 'wui-create', notification)
+        end
+
+        it { is_expected.to respond_with(201) }
+
+        it 'responds with right parameters' do
+          expect(response_body.keys).to eq ['id',
+                                            'wui_type',
+                                            'status',
+                                            'updated_at',
+                                            'latitude',
+                                            'longitude']
+        end
+      end
+
+      context 'with vehicle' do
+        let(:victim_params) { { vehicle_identifier: vehicle.identifier} }
+
+        context 'with just one receiver' do
+          let(:vehicle) { create(:vehicle, users: [current_owner]) }
+          let(:before_context) { vehicle }
+
+          context 'with successful pusher trigger' do
+            let(:before_context) do
+              allow(controller).to receive(:notification_for)
+                .with(kind_of(Wui))
+                .and_return(notification)
+
+              expect(Pusher).to receive(:trigger)
+                .with(current_owner.id.to_s, 'wui-create', notification)
+            end
+
+            it { is_expected.to respond_with(201) }
+
+            it 'responds with right parameters' do
+              expect(response_body.keys).to eq ['id',
+                                                'wui_type',
+                                                'status',
+                                                'updated_at',
+                                                'latitude',
+                                                'longitude',
+                                                'vehicle']
+
+              expect(response_body['vehicle'].keys).to eq ['id', 'identifier']
+            end
+
+            it 'creates the wui with :sent status' do
+              expect(response_body['status']).to eq 'sent'
+              expect(Wui.last.status).to eq 'sent'
+            end
+          end
+
+          context 'with failing pusher trigger' do
+            let(:before_context) do
+              expect(Pusher).to receive(:trigger).and_raise(Pusher::Error)
+              expect(Rollbar).to receive(:error)
+            end
+
+            it { is_expected.to respond_with 500 }
+            it 'does not create the wui' do
+              expect(Wui.all.count).to eq 0
+            end
+          end
+        end
+
+        context 'with many receivers' do
+          let(:user1) { create(:user) }
+          let(:user2) { create(:user) }
+          let(:user3) { create(:user) }
+          let(:vehicle) { create(:vehicle, users: [user1, user2, user3]) }
+
           let(:notification) { double(:notification) }
 
           let(:before_context) do
-            allow(controller).to receive(:notification_for)
-              .with(kind_of(Wui))
-              .and_return(notification)
+            vehicle
 
-            expect(Pusher).to receive(:trigger)
-              .with(current_owner.id.to_s, 'wui-create', notification)
+            allow(controller)
+              .to receive(:notification_for).with(kind_of(Wui)).and_return(notification)
+
+            expect(Pusher)
+              .to receive(:trigger).with(user1.id.to_s, 'wui-create', notification)
+            
+            expect(Pusher)
+              .to receive(:trigger).with(user2.id.to_s, 'wui-create', notification)
+            
+            expect(Pusher)
+              .to receive(:trigger).with(user3.id.to_s, 'wui-create', notification)
           end
 
-          it { is_expected.to respond_with(201) }
-
-          it 'responds with right parameters' do
-            expect(response_body.keys).to eq ['id',
-                                              'wui_type',
-                                              'status',
-                                              'updated_at',
-                                              'vehicle']
-
-            expect(response_body['vehicle'].keys).to eq ['id', 'identifier']
-          end
-
-          it 'creates the wui with :sent status' do
-            expect(response_body['status']).to eq 'sent'
-            expect(Wui.last.status).to eq 'sent'
-          end
+          it { is_expected.to respond_with 201 }
         end
-
-        context 'with failing pusher trigger' do
-          let(:before_context) do
-            expect(Pusher).to receive(:trigger).and_raise(Pusher::Error)
-            expect(Rollbar).to receive(:error)
-          end
-
-          it { is_expected.to respond_with 500 }
-          it 'does not create the wui' do
-            expect(Wui.all.count).to eq 0
-          end
-        end
-      end
-
-      context 'with many receivers' do
-        let(:user1) { create(:user) }
-        let(:user2) { create(:user) }
-        let(:user3) { create(:user) }
-        let(:vehicle) { create(:vehicle, users: [user1, user2, user3]) }
-
-        let(:notification) { double(:notification) }
-
-        let(:before_context) do
-          vehicle
-
-          allow(controller).to receive(:notification_for)
-            .with(kind_of(Wui))
-            .and_return(notification)
-
-          expect(Pusher).to receive(:trigger)
-            .with(user1.id.to_s, 'wui-create', notification)
-          expect(Pusher).to receive(:trigger)
-            .with(user2.id.to_s, 'wui-create', notification)
-          expect(Pusher).to receive(:trigger)
-            .with(user3.id.to_s, 'wui-create', notification)
-        end
-
-        it { is_expected.to respond_with 201 }
       end
     end
 
@@ -101,7 +135,7 @@ describe Api::V1::WuisController do
 
         it { is_expected.to respond_with(422) }
         it 'responds with validation errors' do
-          expect(response_body['errors'].keys).to eq ['wui_type', 'vehicle']
+          expect(response_body['errors'].keys).to include('wui_type', 'vehicle')
         end
       end
     end
@@ -146,6 +180,8 @@ describe Api::V1::WuisController do
                                             'wui_type',
                                             'status',
                                             'updated_at',
+                                            'latitude',
+                                            'longitude',
                                             'vehicle']
 
           expect(response_body['vehicle'].keys).to eq ['id', 'identifier']

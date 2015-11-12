@@ -15,6 +15,7 @@ module Api
 
       def flag_params
         params.permit(:longitude, :latitude, :radius)
+          .merge(user_id: current_owner.id)
       end
     end
   end

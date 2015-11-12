@@ -45,6 +45,8 @@ shared_examples 'get sent or received wuis' do |wuis_action|
                                              'wui_type',
                                              'status',
                                              'updated_at',
+                                             'latitude',
+                                             'longitude',
                                              'vehicle']
 
       expect(response_body.first['vehicle'].keys).to eq ['id', 'identifier']

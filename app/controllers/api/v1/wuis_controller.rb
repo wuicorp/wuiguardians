@@ -65,10 +65,10 @@ module Api
       # Is just owner-receiver comunication, so the receiver is
       #   who is not the caller (current_owner).
       def receivers_for(wui)
-        if wui.vehicle.belongs_to?(current_owner)
-          [wui.user_id]
+        if wui.user == current_owner
+          wui.users.map(&:id)
         else
-          wui.vehicle_users.map(&:id)
+          [wui.user_id]
         end
       end
 
@@ -84,7 +84,7 @@ module Api
         params.merge(action: :sent,
                      user_id: current_owner.id,
                      vehicle_id: vehicle_id_from_params)
-          .permit(:wui_type, :user_id, :vehicle_id)
+          .permit(:wui_type, :user_id, :vehicle_id, :latitude, :longitude)
       end
 
       def wui_params_for_update
