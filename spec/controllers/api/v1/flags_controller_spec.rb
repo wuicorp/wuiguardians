@@ -38,4 +38,51 @@ describe Api::V1::FlagsController do
       end
     end
   end
+
+  describe 'PUT #update', authenticated_resource: true do
+    let(:action) { -> { put :update, request_params } }
+
+    context 'with unexisting flag' do
+      let(:request_params) { { id: 'unexisting' } }
+
+      it 'responds with not found' do
+        expect(response.status).to eq 404
+      end
+    end
+
+    context 'with existing flag' do
+      let(:flag) { create(:flag) }
+
+      let(:request_params) do
+        { id: flag.id }.merge(flag_params)
+      end
+
+      context 'with valid parameters' do
+        let(:flag_params) do
+          { longitude: '2.0' }
+        end
+
+        it { is_expected.to respond_with(200) }
+
+        it 'updates the flag' do
+          expect(flag.reload.longitude).to eq 2.0
+        end
+      end
+
+      context 'with invalid parameters' do
+        let(:flag_params) do
+          { longitude: 'xx',
+            latitude: 'xx',
+            radius: 'xx' }
+        end
+
+        it { is_expected.to respond_with(422) }
+
+        it 'responds with validation errors' do
+          expect(response_body['errors'].keys)
+            .to eq %w(longitude latitude radius)
+        end
+      end
+    end
+  end
 end
