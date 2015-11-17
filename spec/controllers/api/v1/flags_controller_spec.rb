@@ -114,4 +114,28 @@ describe Api::V1::FlagsController do
       end
     end
   end
+
+  describe 'DELET #destroy', authenticated_resource: true do
+    let(:action) { -> { delete :destroy, request_params } }
+
+    context 'with unexisting flag' do
+      let(:request_params) { { id: 'unexisting' } }
+
+      it 'responds with not found' do
+        expect(response.status).to eq 404
+      end
+    end
+
+    context 'with existing flag' do
+      let(:flag) { create(:flag) }
+
+      let(:request_params) { { id: flag.id } }
+
+      it { is_expected.to respond_with(204) }
+
+      it 'destroys the flag' do
+        expect(Flag.count).to eq 0
+      end
+    end
+  end
 end

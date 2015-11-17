@@ -29,6 +29,13 @@ module Api
         end
       end
 
+      def destroy
+        with_current_resource do |flag|
+          flag.destroy!
+          render status: 204, json: nil
+        end
+      end
+
       private
 
       def flag_params
