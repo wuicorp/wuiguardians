@@ -11,9 +11,9 @@ module Wuiguardians
         def success(action, resource = nil)
           case action
           when :get, :update, :delete
-            controller.render json: resource.as_json, status: 200
+            controller.render json: resource.as_json, status: 200, serializer: nil
           when :create
-            controller.render json: resource.as_json, status: 201
+            controller.render json: resource.as_json, status: 201, serializer: nil
           end
         end
 
