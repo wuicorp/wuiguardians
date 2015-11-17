@@ -6,6 +6,7 @@ module Api
       respond_to :json
       before_action :doorkeeper_authorize!
       skip_before_filter :verify_authenticity_token
+      serialization_scope :view_context
 
       # Find the user that owns the access token
       def current_owner

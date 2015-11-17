@@ -13,7 +13,7 @@ describe Wuiguardians::Api::V1::Responder do
 
       it 'calls render with resource as json and right status' do
         expect(controller).to receive(:render)
-          .with(json: resource.as_json, status: status)
+          .with(json: resource.as_json, status: status, serializer: nil)
       end
     end
 
