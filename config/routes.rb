@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       resources :registrations, only: [:create]
       resources :users, only: [:show, :update]
       resources :vehicles, only: [:index, :create, :update, :destroy]
-      resources :flags, only: [:create, :update]
+      resources :flags, only: [:create, :update, :show]
 
       resources :wuis, only: [:create, :update] do
         collection do
