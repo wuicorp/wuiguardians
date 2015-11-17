@@ -8,6 +8,10 @@ module Api
       skip_before_filter :verify_authenticity_token
       serialization_scope :view_context
 
+      def default_serializer_options
+        { root: false }
+      end
+      
       # Find the user that owns the access token
       def current_owner
         return unless doorkeeper_token && doorkeeper_token.resource_owner_id

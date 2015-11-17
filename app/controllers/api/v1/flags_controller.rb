@@ -3,7 +3,7 @@ module Api
     class FlagsController < ApiController
       def show
         with_current_resource do |flag|
-          render json: flag, root: false
+          render json: flag
         end
       end
 
@@ -11,7 +11,7 @@ module Api
         @flag = Flag.new(flag_params.merge(user_id: current_owner.id))
 
         if @flag.save
-          responder.success(:create, @flag)
+          render status: 201, json: @flag
         else
           responder.invalid_resource(@flag)
         end
@@ -21,7 +21,7 @@ module Api
         with_current_resource do |flag|
           with_filtered_params(flag_params) do |params|
             if flag.update(params)
-              responder.success(:update, flag)
+              render json: flag
             else
               responder.invalid_resource(flag)
             end

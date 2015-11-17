@@ -3,7 +3,7 @@ module Api
     class UsersController < ApiController
       def show
         with_current_user do |user|
-          responder.success(:get, user)
+          render json: user
         end
       end
 
@@ -11,7 +11,7 @@ module Api
         with_current_user do |user|
           with_filtered_params(params_for_update) do |params|
             if user.update(params)
-              responder.success(:update, user)
+              render json: user
             else
               responder.invalid_resource(user)
             end

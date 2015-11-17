@@ -3,12 +3,12 @@ module Api
     class WuisController < ApiController
       def sent
         wuis = paginate(sent_wuis)
-        responder.success(:get, wuis)
+        render json: wuis
       end
 
       def received
         wuis = paginate(received_wuis)
-        responder.success(:get, wuis)
+        render json: wuis
       end
 
       def create
@@ -16,7 +16,7 @@ module Api
           @wui = Wui.new(wui_params_for_create)
           if @wui.save
             send_wui_notifications(@wui, 'wui-create')
-            responder.success(:create, @wui)
+            render status: 201, json: @wui
           else
             responder.invalid_resource(@wui)
           end
@@ -31,7 +31,7 @@ module Api
             with_filtered_params(wui_params_for_update) do |parameters|
               if wui.update_attributes(parameters)
                 send_wui_notifications(wui, 'wui-update')
-                responder.success(:update, wui)
+                render json: wui
               else
                 responder.invalid_resource(wui)
               end

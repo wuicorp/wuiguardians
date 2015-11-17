@@ -3,14 +3,14 @@ module Api
     class VehiclesController < ApiController
       def index
         vehicles = paginate(current_owner.vehicles)
-        responder.success(:get, vehicles)
+        render json: vehicles
       end
 
       def create
         @vehicle = Vehicle.new(vehicle_params)
         @vehicle.users << current_owner
         if @vehicle.save
-          responder.success(:create, @vehicle)
+          render status: 201, json: @vehicle
         else
           responder.invalid_resource(@vehicle)
         end
@@ -20,7 +20,7 @@ module Api
         with_current_owned_resource do |vehicle|
           with_filtered_params(vehicle_params) do |params|
             if vehicle.update(params)
-              responder.success(:update, vehicle)
+              render json: vehicle
             else
               responder.invalid_resource(vehicle)
             end
@@ -36,7 +36,7 @@ module Api
             vehicle.users.delete(current_owner)
           end
 
-          responder.success(:delete, vehicle)
+          render json: vehicle
         end
       end
 
