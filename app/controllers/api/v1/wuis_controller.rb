@@ -18,11 +18,11 @@ module Api
             send_wui_notifications(@wui, 'wui-create')
             render status: 201, json: @wui
           else
-            responder.invalid_resource(@wui)
+            invalid_resource!(@wui)
           end
         end
       rescue Pusher::Error => e
-        responder.third_party_error(e, 'Pusher.trigger error creating a Wui')
+        third_party_error!(e, 'Pusher.trigger error creating a Wui')
       end
 
       def update
@@ -33,13 +33,13 @@ module Api
                 send_wui_notifications(wui, 'wui-update')
                 render json: wui
               else
-                responder.invalid_resource(wui)
+                invalid_resource!(wui)
               end
             end
           end
         end
       rescue Pusher::Error => e
-        responder.third_party_error(e, 'Pusher.trigger error updating a Wui')
+        third_party_error!(e, 'Pusher.trigger error updating a Wui')
       end
 
       private

@@ -13,7 +13,7 @@ module Api
         if @flag.save
           render status: 201, json: @flag
         else
-          responder.invalid_resource(@flag)
+          invalid_resource!(@flag)
         end
       end
 
@@ -23,7 +23,7 @@ module Api
             if flag.update(params)
               render json: flag
             else
-              responder.invalid_resource(flag)
+              invalid_resource!(flag)
             end
           end
         end

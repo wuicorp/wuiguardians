@@ -12,7 +12,7 @@ module Api
         if @vehicle.save
           render status: 201, json: @vehicle
         else
-          responder.invalid_resource(@vehicle)
+          invalid_resource!(@vehicle)
         end
       end
 
@@ -22,7 +22,7 @@ module Api
             if vehicle.update(params)
               render json: vehicle
             else
-              responder.invalid_resource(vehicle)
+              invalid_resource!(vehicle)
             end
           end
         end

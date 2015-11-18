@@ -6,7 +6,7 @@ module Api
         if @user.save
           render status: 201, json: response_for_create
         else
-          responder.invalid_resource(@user)
+          invalid_resource!(@user)
         end
       end
 
