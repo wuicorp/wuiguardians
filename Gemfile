@@ -32,7 +32,7 @@ gem 'rails_12factor', group: :production
 
 gem 'puma'
 gem 'doorkeeper', '~> 2.2.1'
-gem 'devise', '~> 3.4.1'
+gem 'devise', '~> 3.5.2'
 gem 'oauth2'
 
 gem 'pusher', '~> 0.14.4'

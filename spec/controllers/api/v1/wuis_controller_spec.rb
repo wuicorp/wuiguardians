@@ -39,12 +39,8 @@ describe Api::V1::WuisController do
         it { is_expected.to respond_with(201) }
 
         it 'responds with right parameters' do
-          expect(response_body.keys).to eq ['id',
-                                            'wui_type',
-                                            'status',
-                                            'updated_at',
-                                            'latitude',
-                                            'longitude']
+          expect(response_body.keys)
+            .to eq %w(id wui_type status updated_at vehicle latitude longitude)
         end
       end
 
@@ -68,13 +64,8 @@ describe Api::V1::WuisController do
             it { is_expected.to respond_with(201) }
 
             it 'responds with right parameters' do
-              expect(response_body.keys).to eq ['id',
-                                                'wui_type',
-                                                'status',
-                                                'updated_at',
-                                                'latitude',
-                                                'longitude',
-                                                'vehicle']
+              expect(response_body.keys)
+                .to eq %w(id wui_type status updated_at vehicle latitude longitude)
 
               expect(response_body['vehicle'].keys).to eq ['id', 'identifier']
             end
@@ -176,13 +167,8 @@ describe Api::V1::WuisController do
         it { is_expected.to respond_with 200 }
 
         it 'responds with right parameters' do
-          expect(response_body.keys).to eq ['id',
-                                            'wui_type',
-                                            'status',
-                                            'updated_at',
-                                            'latitude',
-                                            'longitude',
-                                            'vehicle']
+          expect(response_body.keys)
+            .to eq %w(id wui_type status updated_at vehicle latitude longitude)
 
           expect(response_body['vehicle'].keys).to eq ['id', 'identifier']
         end

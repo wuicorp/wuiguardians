@@ -4,9 +4,9 @@ module Api
       def create
         @user = User.new(user_params)
         if @user.save
-          responder.success(:create, response_for_create)
+          render status: 201, json: response_for_create
         else
-          responder.invalid_resource(@user)
+          invalid_resource!(@user)
         end
       end
 
