@@ -2,12 +2,12 @@ module Api
   module V1
     class WuisController < ApiController
       def sent
-        wuis = paginate(sent_wuis)
+        wuis = paginate(current_owner.sent_wuis)
         render json: wuis
       end
 
       def received
-        wuis = paginate(received_wuis)
+        wuis = paginate(current_owner.received_wuis)
         render json: wuis
       end
 
@@ -44,18 +44,6 @@ module Api
 
       private
 
-      def received_wuis
-        current_owner.find_all_received_wuis.to_a.map do |wui|
-          wui.as_json
-        end
-      end
-
-      def sent_wuis
-        current_owner.wuis.to_a.map do |wui|
-          wui.as_json
-        end
-      end
-
       def send_wui_notifications(wui, message)
         receivers_for(wui).each do |receiver|
           Pusher.trigger(receiver.to_s, message, notification_for(wui))
@@ -82,17 +70,12 @@ module Api
 
       def wui_params_for_create
         params.merge(action: :sent,
-                     user_id: current_owner.id,
-                     vehicle_id: vehicle_id_from_params)
-          .permit(:wui_type, :user_id, :vehicle_id, :latitude, :longitude)
+                     user_id: current_owner.id)
+          .permit(:wui_type, :user_id, :vehicle_identifier, :latitude, :longitude)
       end
 
       def wui_params_for_update
         params.permit(:status)
-      end
-
-      def vehicle_id_from_params
-        Vehicle.find_by(identifier: params[:vehicle_identifier]).try(:id)
       end
     end
   end

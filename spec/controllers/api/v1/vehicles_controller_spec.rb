@@ -130,44 +130,19 @@ describe Api::V1::VehiclesController do
           current_owner.save!
         end
 
-        context 'just by owner' do
-          let(:vehicle) { create(:vehicle) }
+        let(:vehicle) { create(:vehicle) }
 
-          it { is_expected.to respond_with(200) }
+        it { is_expected.to respond_with(200) }
 
-          it 'destroys the vehicle' do
-            expect(Vehicle.count).to eq 0
-          end
-        end
-
-        context 'also by other users' do
-          let(:vehicle) do
-            create(:vehicle).tap do |v|
-              v.users << create(:user)
-              v.save!
-            end
-          end
-
-          it { is_expected.to respond_with(200) }
-
-          it 'does not destroy the vehicle' do
-            expect(Vehicle.count).to eq 1
-          end
-
-          it 'does not destroy the caller user' do
-            expect(User.find(current_owner.id)).to_not be_nil
-          end
-
-          it 'removes vehicle relation with caller user' do
-            expect(current_owner.reload.vehicles).to_not include vehicle
-          end
+        it 'destroys the vehicle' do
+          expect(Vehicle.count).to eq 0
         end
       end
 
       context 'vehicle does not owned by current owner' do
         let(:vehicle) do
           create(:vehicle).tap do |v|
-            v.users << create(:user)
+            v.user = create(:user)
             v.save!
           end
         end
