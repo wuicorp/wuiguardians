@@ -8,7 +8,7 @@ module Api
 
       def create
         @vehicle = Vehicle.new(vehicle_params)
-        @vehicle.users << current_owner
+        @vehicle.user = current_owner
         if @vehicle.save
           render status: 201, json: @vehicle
         else
@@ -30,12 +30,7 @@ module Api
 
       def destroy
         with_current_owned_resource do |vehicle|
-          if vehicle.just_belongs_to?(current_owner)
-            vehicle.destroy
-          else
-            vehicle.users.delete(current_owner)
-          end
-
+          vehicle.destroy
           render json: vehicle
         end
       end

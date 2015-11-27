@@ -4,7 +4,7 @@ FactoryGirl.define do
     status 'sent'
     association :user, factory: :user
 
-    association :vehicle, factory: :vehicle
+    vehicle_identifier '1234AAA'
 
     factory :wui_with_position do
       latitude 0.0

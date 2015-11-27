@@ -1,25 +1,15 @@
 class Wui < ActiveRecord::Base 
   belongs_to :user
   has_and_belongs_to_many :users
-  belongs_to :vehicle
 
   validates_presence_of :wui_type
   validates_presence_of :user
-  validates_presence_of :vehicle, if: -> { latitude.blank? && longitude.blank? }
-  validates_presence_of :latitude, :longitude, if: -> { vehicle.blank? }
+  validates_presence_of :vehicle_identifier, if: -> { latitude.blank? && longitude.blank? }
+  validates_presence_of :latitude, :longitude, if: -> { vehicle_identifier.blank? }
   validates_inclusion_of :status, in: %w(sent received truthy falsey) << nil
 
   before_create -> { self.status = 'sent' }
   before_create :calculate_users
-
-  def as_json(options = {})
-    super({ only: [:id, :wui_type, :status, :updated_at, :latitude, :longitude],
-            include: [vehicle: { only: [:id, :identifier] }] }.merge(options))
-  end
-
-  def vehicle_users
-    vehicle.users
-  end
 
   def user_ids_at
     Flags.at(longitude, latitude).join(:users).distinct.pluck('user.id')
@@ -36,8 +26,10 @@ class Wui < ActiveRecord::Base
   end
 
   def vehicle_users
-    return unless vehicle_id.present?
-    @vehicle_users ||= vehicle.users
+    return unless vehicle_identifier.present?
+    @vehicle_users ||= Vehicle.where(identifier: vehicle_identifier).reduce([]) do |users, v|
+      users << v.user
+    end
   end
 
   def flag_users

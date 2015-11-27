@@ -40,15 +40,16 @@ describe Api::V1::WuisController do
 
         it 'responds with right parameters' do
           expect(response_body.keys)
-            .to eq %w(id wui_type status updated_at vehicle latitude longitude)
+            .to eq %w(id wui_type status updated_at vehicle_identifier latitude longitude)
         end
       end
 
       context 'with vehicle' do
-        let(:victim_params) { { vehicle_identifier: vehicle.identifier} }
+        let(:victim_params) { { vehicle_identifier: vehicle_identifier} }
 
         context 'with just one receiver' do
-          let(:vehicle) { create(:vehicle, users: [current_owner]) }
+          let(:vehicle) { create(:vehicle, user: current_owner) }
+          let(:vehicle_identifier) { vehicle.identifier }
           let(:before_context) { vehicle }
 
           context 'with successful pusher trigger' do
@@ -65,9 +66,7 @@ describe Api::V1::WuisController do
 
             it 'responds with right parameters' do
               expect(response_body.keys)
-                .to eq %w(id wui_type status updated_at vehicle latitude longitude)
-
-              expect(response_body['vehicle'].keys).to eq ['id', 'identifier']
+                .to eq %w(id wui_type status updated_at vehicle_identifier latitude longitude)
             end
 
             it 'creates the wui with :sent status' do
@@ -93,12 +92,17 @@ describe Api::V1::WuisController do
           let(:user1) { create(:user) }
           let(:user2) { create(:user) }
           let(:user3) { create(:user) }
-          let(:vehicle) { create(:vehicle, users: [user1, user2, user3]) }
+          let(:vehicle1) { create(:vehicle, user: user1) }
+          let(:vehicle2) { create(:vehicle, user: user2, identifier: vehicle1.identifier ) }
+          let(:vehicle3) { create(:vehicle, user: user3, identifier: vehicle1.identifier ) }
+          let(:vehicle_identifier) { vehicle1.identifier }
 
           let(:notification) { double(:notification) }
 
           let(:before_context) do
-            vehicle
+            vehicle1
+            vehicle2
+            vehicle3
 
             allow(controller)
               .to receive(:notification_for).with(kind_of(Wui)).and_return(notification)
@@ -121,12 +125,12 @@ describe Api::V1::WuisController do
     context 'with invalid parameters' do
       context 'with unexisting vehicle' do
         let(:request_params) do
-          { wui_type: '', vehicle_identifier: 'unexiststing' }
+          { wui_type: '' }
         end
 
         it { is_expected.to respond_with(422) }
         it 'responds with validation errors' do
-          expect(response_body['errors'].keys).to include('wui_type', 'vehicle')
+          expect(response_body['errors'].keys).to include('wui_type')
         end
       end
     end
@@ -138,7 +142,7 @@ describe Api::V1::WuisController do
     let(:wui) do
       receiver.vehicles << create(:vehicle)
       receiver.save!
-      create(:wui, vehicle: receiver.vehicles.first)
+      create(:wui, vehicle_identifier: receiver.vehicles.first.identifier)
     end
 
     let(:receiver) { current_owner }
@@ -168,9 +172,7 @@ describe Api::V1::WuisController do
 
         it 'responds with right parameters' do
           expect(response_body.keys)
-            .to eq %w(id wui_type status updated_at vehicle latitude longitude)
-
-          expect(response_body['vehicle'].keys).to eq ['id', 'identifier']
+            .to eq %w(id wui_type status updated_at vehicle_identifier latitude longitude)
         end
 
         it 'udates the wui' do

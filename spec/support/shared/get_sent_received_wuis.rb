@@ -12,21 +12,21 @@ shared_examples 'get sent or received wuis' do |wuis_action|
   context 'with sent and received wuis' do
     let(:received) do
       sender = create(:user)
-      vehicle = build(:vehicle)
-      vehicle.users << current_owner
+      vehicle = create(:vehicle, user: current_owner)
+
       create(:wui,
              user: sender,
-             vehicle: vehicle,
+             vehicle_identifier: vehicle.identifier,
              updated_at: 2.minutes.ago)
     end
 
     let(:sent) do
       receiver = create(:user)
-      vehicle = build(:vehicle)
-      vehicle.users << receiver
+      vehicle = create(:vehicle, user: receiver)
+
       create(:wui,
              user: current_owner,
-             vehicle: vehicle,
+             vehicle_identifier: vehicle.identifier,
              updated_at: 1.minute.ago)
     end
 
@@ -45,17 +45,14 @@ shared_examples 'get sent or received wuis' do |wuis_action|
                                              'wui_type',
                                              'status',
                                              'updated_at',
+                                             'vehicle_identifier',
                                              'latitude',
-                                             'longitude',
-                                             'vehicle']
-
-      expect(response_body.first['vehicle'].keys).to eq ['id', 'identifier']
+                                             'longitude']
     end
 
     it 'includes the right vehicle in the response' do
-      expect(response_body.first).to include 'vehicle'
-      expect(response_body.first['vehicle']['id'])
-        .to eq send(wuis_action).vehicle.id
+      expect(response_body.first['vehicle_identifier'])
+        .to eq send(wuis_action).vehicle_identifier
     end
 
     it 'responds with pagination' do
