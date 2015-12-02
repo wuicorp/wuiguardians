@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151120075305) do
+ActiveRecord::Schema.define(version: 20151103081205) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,13 +114,13 @@ ActiveRecord::Schema.define(version: 20151120075305) do
 
   create_table "wuis", force: true do |t|
     t.integer  "user_id"
+    t.string   "vehicle_identifier"
+    t.float    "latitude"
+    t.float    "longitude"
     t.string   "wui_type"
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.string   "vehicle_identifier"
   end
 
 end
