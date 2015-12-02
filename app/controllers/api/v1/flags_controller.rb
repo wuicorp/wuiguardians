@@ -1,6 +1,10 @@
 module Api
   module V1
     class FlagsController < ApiController
+      def index
+        render json: current_owner.flags
+      end
+
       def show
         with_current_resource do |flag|
           render json: flag
