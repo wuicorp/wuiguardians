@@ -86,6 +86,44 @@ describe Api::V1::FlagsController do
     end
   end
 
+  describe 'GET #index', authenticated_resource: true do
+    let(:action) { -> { get :index } }
+
+    context 'with no flags' do
+      it 'responds with 200' do
+        expect(response.status).to eq 200
+      end
+
+      it 'responds with empty list' do
+        expect(response_body).to eq []
+      end
+    end
+
+    context 'with flags' do
+      let(:flag) { create(:flag) }
+
+      let(:before_context) do
+        current_owner.flags << flag
+        current_owner.save!
+      end
+
+      it 'responds with 200' do
+        expect(response.status).to eq 200
+      end
+
+      it 'responds with flags list' do
+        expect(response_body.count).to be 1
+        expect(response_body.first)
+          .to eq('id' => flag.id,
+                 'longitude' => flag.longitude,
+                 'latitude' => flag.latitude,
+                 'radius' => flag.radius,
+                 'created_at' => flag.created_at.as_json,
+                 'updated_at' => flag.updated_at.as_json)
+      end
+    end
+  end
+
   describe 'GET #show', authenticated_resource: true do
     let(:action) { -> { get :show, request_params } }
 
